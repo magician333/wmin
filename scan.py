@@ -63,10 +63,10 @@ def dic_scan(web, dictionary_loc, export_filename="", to=0.4, proxy=None,ua=None
         try:
             code = requests.get(web, timeout=to,proxies=proxy,headers=ua).status_code
             if "" != check_text and check_text not in requests.get(web).text:
-                printf(web + "----------" + str(code),"normal")
+                printf(web + "\t\t\t" + str(code),"normal")
                 result.export_result(export_filename, web,web+"---"+str(code))
             elif "" == check_text:
-                printf(web + "----------" + str(code),"normal")
+                printf(web + "\t\t\t" + str(code),"normal")
                 result.export_result(export_filename, web,web+"---"+str(code))
             else:
                 pass
