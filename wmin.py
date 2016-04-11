@@ -9,7 +9,7 @@ This is help document
 \t-d(dictionary) <target>\t\tset dictionary
 \t-f(filename) <target>\t\tset output filename
 \t-t(timeout) <target>\t\tset timeout\t*use float
-\t-p(proxy) <target>\t\tset proxy\t*Example: ip:port@type
+\t-p(proxy) <target>\t\tset proxy\t*Example: ip:port~type
 \t-m(max_code) <target>\t\tset maximum status code
 \t-a(User-Agent) <target>\t\tset User-Agent
 \t-i(ignore_text) <target>\t\tset ignore text
@@ -64,24 +64,28 @@ else:
                 try:
                     timeout = float(argv[i + 1])
                 except ValueError:
-                    printf("Must use postitive float","warning")
+                    printf("Must use postitive float,will use default","warning")
             except:
                 printf("-t No argv!","error")
         elif "-p" == argv[i]:  # set proxy
             try:
-                proxy = dict(
-                    {argv[i + 1].split("@")[1]: argv[i + 1].split("@")[0]})
-                """
-                document:format:  IP:port@type
-                """
+                try:
+                    proxy = dict({argv[i+1].split("~")[1]: argv[i+1].split(":")[0]+":"+argv[i+1].split("~")[0].split(":")[1]})
+                    """
+                    document:format:  IP:port~type
+                    """
+                except IndexError:
+                    printf("Type Wrong !!!,will use default","warning")
+                    proxy = None
             except:
+                printf(e,"error")
                 printf("-p No argv!","error")
         elif "-m" == argv[i]:  # set maximum status_code to show
             try:
                 try:
                     max_code = argv[i + 1]
                 except ValueError:
-                    printf("Must use postitive integer","warning")
+                    printf("Must use postitive integer,will use default","warning")
             except:
                  printf("-m No argv!","error")
         elif "-a" == argv[i]:	#set User-Agent
