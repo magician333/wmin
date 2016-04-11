@@ -8,11 +8,11 @@ This is help document
 \t-u(url) <target>\t\tset url
 \t-d(dictionary) <target>\t\tset dictionary
 \t-f(filename) <target>\t\tset output filename
-\t-o(timeout) <target>\t\tset timeout\t*use float
+\t-t(timeout) <target>\t\tset timeout\t*use float
 \t-p(proxy) <target>\t\tset proxy\t*Example: ip:port@type
 \t-m(max_code) <target>\t\tset maximum status code
 \t-a(User-Agent) <target>\t\tset User-Agent
-\t-c(check_text) <target>\t\tset ignore text
+\t-i(ignore_text) <target>\t\tset ignore text
 """
 result_file = ""
 timeout = 0.4
@@ -59,14 +59,14 @@ else:
                 result_file = argv[i + 1]
             except:
                 printf("-f No argv!","error")
-        elif "-o" == argv[i]:  # set timeout
+        elif "-t" == argv[i]:  # set timeout
             try:
                 try:
                     timeout = float(argv[i + 1])
                 except ValueError:
                     printf("Must use postitive float","warning")
             except:
-                printf("-o No argv!","error")
+                printf("-t No argv!","error")
         elif "-p" == argv[i]:  # set proxy
             try:
                 proxy = dict(
@@ -89,17 +89,17 @@ else:
                 ua = {"User-Agent":argv[i+1]}
             except:
                 printf("-a No agrv!","error")
-        elif "-c" == argv[i]:   #set ignore string
+        elif "-i" == argv[i]:   #set ignore string
             try:
                 check_text = argv[i+1]
             except:
-                printf("-c No argv!","error")
+                printf("-i No argv!","error")
         elif "-h" == argv[i]:
             printf(help_doc)
         elif 0 == len(argv):
             printf("Please enter the argv!","warning")
         else:
-            if argv[i - 1] in ["-u", "-d", "-f", "-o", "-p","-a","-c","-m"]:
+            if argv[i - 1] in ["-u", "-d", "-f", "-t", "-p","-a","-i","-m"]:
                 pass
             else:
                 printf("Can't find argv: " + argv[i],"warning")
