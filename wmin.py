@@ -70,10 +70,13 @@ else:
         elif "-p" == argv[i]:  # set proxy
             try:
                 try:
-                    proxy = dict({argv[i+1].split("~")[1]: argv[i+1].split(":")[0]+":"+argv[i+1].split("~")[0].split(":")[1]})
-                    """
-                    document:format:  IP:port~type
-                    """
+                    if ":" and "~" in argv[i+1]:
+                        proxy = dict({argv[i+1].split("~")[1]: argv[i+1].split(":")[0]+":"+argv[i+1].split("~")[0].split(":")[1]})
+                        """
+                        document:format:  IP:port~type
+                        """
+                    else:
+                        raise IndexError
                 except IndexError:
                     printf("Type Wrong !!!,will use default","warning")
                     proxy = None
