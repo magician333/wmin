@@ -2,7 +2,6 @@
 from sys import argv,version_info
 import scan
 import os
-import urllib
 help_doc = """ 
 This is help document
 \t-u(url) <target>\t\tset url
@@ -17,10 +16,10 @@ This is help document
 result_file = ""
 timeout = 0.4
 proxy = None
-ua=None
-check_text=""
-url=""
-dictionary=""
+ua = None
+ignore_text = ""
+url = ""
+dictionary = ""
 use_help = 0
 U = False
 D = False
@@ -35,7 +34,7 @@ if len(argv) <= 1:
 else:
     argv.pop(0)  # delete the argv[0]
     for i in range(0, len(argv)):
-        if "-u" == argv[i]:  # get url
+        if "-u" == argv[i]:  # set url
 
             try:
                 url = argv[i + 1]
@@ -43,27 +42,29 @@ else:
             except IndexError:
                 printf("-u No argv!","error")
 
-        elif "-d" == argv[i]:  # get dictionary
+        elif "-d" == argv[i]:  # set dictionary
             try:
+
                 dictionary = argv[i + 1]
 
                 try:
                     open(dictionary)
                     D = True
                 except FileNotFoundError:
-                    printf(dictionary+" is not found","error")
-                    D = False
+                    printf(dictionary + " not found","error")
+                    dictionary == None
                     break
                     
             except IndexError:
                 printf("-d No argv!","error")
 
-        elif "-f" == argv[i]:  # get output filename
+        elif "-f" == argv[i]:  # set output filename
             try:
                 result_file = argv[i + 1]
             except IndexError:
                 printf("-f No argv!","error")
         elif "-t" == argv[i]:  # set timeout
+
             try:
 
                 try:
@@ -113,10 +114,10 @@ else:
             except IndexError:
                 printf("-a No agrv!","error")
 
-        elif "-i" == argv[i]:   #set ignore string
+        elif "-i" == argv[i]:   #set ignore text
 
             try:
-                check_text = argv[i+1]
+                ignore_text = argv[i+1]
             except IndexError:
                 printf("-i No argv!","error")
 
@@ -144,8 +145,8 @@ else:
         result_file == ""
 
     if U ==True and D == True:
-        scan.dic_scan(url, dictionary, result_file, timeout, proxy,ua,check_text)
-    elif U == True and D == False:
+        scan.dic_scan(url, dictionary, result_file, timeout, proxy,ua,ignore_text)
+    elif U == True and D == False and dictionary == None:
         scan.get_info(url)
     else:
         pass

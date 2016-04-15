@@ -42,7 +42,7 @@ def get_info(web):
     except:
         printf("Can\'t get ip,Connect wrong","error")
 
-def dic_scan(web, dictionary_loc, export_filename="", to=0.4, proxy=None,ua=None,check_text=""):
+def dic_scan(web, dictionary_loc, export_filename="", to=0.4, proxy=None,ua=None,ignore_text=""):
     if 0 == len(export_filename):
         export_filename = web
     web = web_deal(web)[0]
@@ -62,10 +62,10 @@ def dic_scan(web, dictionary_loc, export_filename="", to=0.4, proxy=None,ua=None
 
         try:
             code = requests.get(web, timeout=to,proxies=proxy,headers=ua).status_code
-            if "" != check_text and check_text not in requests.get(web).text:
+            if "" != ignore_text and ignore_text not in requests.get(web).text:
                 printf(web + "\t\t\t" + str(code),"normal")
                 result.export_result(export_filename, web,web+"---"+str(code))
-            elif "" == check_text:
+            elif "" == ignore_text:
                 printf(web + "\t\t\t" + str(code),"normal")
                 result.export_result(export_filename, web,web+"---"+str(code))
             else:
