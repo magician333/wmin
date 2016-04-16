@@ -13,6 +13,13 @@ This is help document
 \t-a(User-Agent) <target>\t\tset User-Agent
 \t-i(ignore_text) <target>\t\tset ignore text
 """
+info = """
+Version : 1.0
+Developer : PurpleFire
+Orgization : YeYueHun Information Security Team
+Website : https://github.com/magician333/wmin
+"""
+
 result_file = ""
 timeout = 0.4
 proxy = None
@@ -30,7 +37,7 @@ else:
     from py2 import printf
 
 if len(argv) <= 1:
-    printf(help_doc)
+    printf(info)
 else:
     argv.pop(0)  # delete the argv[0]
     for i in range(0, len(argv)):
@@ -63,6 +70,7 @@ else:
                 result_file = argv[i + 1]
             except IndexError:
                 printf("-f No argv!","error")
+
         elif "-t" == argv[i]:  # set timeout
 
             try:
@@ -123,6 +131,9 @@ else:
 
         elif "-h" == argv[i]:
             printf(help_doc)
+        
+        elif "-v" == argv[i]:
+            printf(info)
 
         elif 0 == len(argv):
             printf("Please enter the argv!","warning")
@@ -146,7 +157,7 @@ else:
 
     if U ==True and D == True:
         scan.dic_scan(url, dictionary, result_file, timeout, proxy,ua,ignore_text)
-    elif U == True and D == False and dictionary == None:
+    elif U == True and D == False:
         scan.get_info(url)
     else:
         pass
