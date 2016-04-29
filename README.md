@@ -10,18 +10,25 @@ Wmin(Website Miner)是夜月魂信息安全团队-**紫火**使用纯Python开�
 ------
 -u(url) <target>
 设置网址
+
 -d(dictionary) <target>
 设置字典
+
 -f(filename) <target>
 设置输出文件名称
+
 -t(timeout) <target>
 设置超时(注意:使用浮点数)
+
 -p(proxy) <target>   
 设置IP代理(格式: ip:port~type)
+
 -m(max_code) <target>
 设置最大状态码
+
 -a(User-Agent) <target>
 设置用户代理UA
+
 -i(ignore_text) <target>
 设置忽略页面包含的文本
 
