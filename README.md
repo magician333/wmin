@@ -33,4 +33,4 @@ Wmin(Website Miner)是夜月魂信息安全团队-**紫火**使用纯Python开�
 *Wmin使用动态导入功能，Python2.x和Python3.x都可运行，但要求版本大于2.5
 *Wmin依赖包：requests,colorama
 
-如果bug反馈请发送邮件至[紫火](magician33333@163.com)
+如果bug反馈请发送邮件至magician33333@163.com
