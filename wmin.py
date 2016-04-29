@@ -158,6 +158,6 @@ else:
     if U ==True and D == True:
         scan.dic_scan(url, dictionary, result_file, timeout, proxy,ua,ignore_text)
     elif U == True and D == False:
-        scan.get_info(url)
+        scan.get_info(url,timeout,proxy,ua)
     else:
         pass

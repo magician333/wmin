@@ -32,9 +32,9 @@ def web_deal(web):
         pass
     return prweb,without_web
 
-def get_info(web):
+def get_info(web,timeout=0.4,proxy=None,ua=None):
     try:
-        printf("Server:\t"+requests.get(web_deal(web)[0]).headers["Server"],"normal")
+        printf("Server:\t"+requests.get(web_deal(web)[0],timeout=timeout,proxies=proxy,headers=ua).headers["Server"],"normal")
     except:
         printf("Can\'t get server,Connect wrong","error")
     try:
