@@ -12,7 +12,7 @@ This is help document
 \t-f(filename) <target>\t\tset output filename
 \t-t(timeout) <target>\t\tset timeout\t*use float
 \t-p(proxy) <target>\t\tset proxy\t*Example: ip:port~type
-\t-m(max_code) <target>\t\tset maximum status code
+\t-m(mutliprogress) <target>\t\tset mutliprogress\t*use int
 \t-a(User-Agent) <target>\t\tset User-Agent
 \t-i(ignore_text) <target>\t\tset ignore text
 """
@@ -111,7 +111,7 @@ else:
             try:
 
                 try:
-                    max_code = argv[i + 1]
+                    mutliprogress = argv[i + 1]
                 except ValueError:
                     printf("Must use postitive integer,will use default","warning")
 
