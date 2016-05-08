@@ -7,9 +7,9 @@ import requests,socket
 import result
 
 if version_info.major == 3:
-    from py3 import printf
+    from py3 import printf,printweb
 else:
-    from py2 import printf
+    from py2 import printf,printweb
 
 
 def web_deal(web):
@@ -63,10 +63,10 @@ def dic_scan(web, dictionary_loc, export_filename="", to=0.4, proxy=None,ua=None
         try:
             code = requests.get(web, timeout=to,proxies=proxy,headers=ua).status_code
             if "" != ignore_text and ignore_text not in requests.get(web).text:
-                printf(web + "\t\t\t" + str(code),"normal")
+                printweb(code,web)
                 result.export_result(export_filename, web,web+"---"+str(code))
             elif "" == ignore_text:
-                printf(web + "\t\t\t" + str(code),"normal")
+                printweb(code,web)
                 result.export_result(export_filename, web,web+"---"+str(code))
             else:
                 pass

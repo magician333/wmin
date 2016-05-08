@@ -27,3 +27,17 @@ def printf(string,status = "blank"):
         print(Fore.GREEN+"[Normal] "+string+Fore.RESET)
     else:
         print(Fore.BLUE+"No "+status+Fore.RESET)
+
+def printweb(code,web):
+    code_init = str(code)[0]
+
+    if "1" == code_init:
+        print(Fore.LIGHTBLACK_EX+"<"+str(code)+">\t"+web+Fore.RESET)
+    if "2" == code_init:
+        print(Fore.LIGHTGREEN_EX+"<"+str(code)+">\t"+web+Fore.RESET)
+    if "3" == code_init:
+        print(Fore.LIGHTCYAN_EX+"<"+str(code)+">\t"+web+Fore.RESET)
+    if "4" == code_init:
+        print(Fore.RED+"<"+str(code)+">\t"+web+Fore.RESET)
+    if "5" == code_init:
+        print(Fore.MAGENTA+"<"+str(code)+">\t"+web+Fore.RESET)
