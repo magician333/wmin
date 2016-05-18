@@ -35,9 +35,9 @@ U = False
 D = False
 
 if version_info.major == 3:
-    from py3 import printf
+    from printf.py3 import printf
 else:
-    from py2 import printf
+    from printf.py2 import printf
 
 if len(argv) <= 1:
     printf(info)

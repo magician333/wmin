@@ -7,9 +7,9 @@ import requests,socket
 import result
 
 if version_info.major == 3:
-    from py3 import printf,printweb
+    from printf.py3 import printf,printweb
 else:
-    from py2 import printf,printweb
+    from printf.py2 import printf,printweb
 
 
 def web_deal(web):
