@@ -23,8 +23,8 @@ Wmin(Website Miner)是夜月魂信息安全团队-**紫火**使用纯Python开�
 -p(proxy) <target>   
 设置IP代理(格式: ip:port~type)
 
--m(max_code) <target>
-设置最大状态码
+-m(mutliprogress) <target>
+设置多进程(暂未开发)
 
 -a(User-Agent) <target>
 设置用户代理UA
