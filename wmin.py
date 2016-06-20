@@ -158,12 +158,7 @@ else:
         result_file == ""
 
     if U ==True and D == True:
-        printf(time.ctime()+"\n","normal")
-        starttime = time.time()
         scan.dic_scan(url, dictionary, result_file, timeout, proxy,ua,ignore_text)
-        endtime = time.time()
-        printf(time.ctime()+"\n","normal")
-        printf("Use time:"+str(endtime-starttime)[:-13],"normal")
     elif U == True and D == False:
         scan.get_info(url,timeout,proxy,ua)
     else:
