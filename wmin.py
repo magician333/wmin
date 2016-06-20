@@ -4,7 +4,6 @@ import scan
 import os
 import time
 
-
 help_doc = """ 
 This is help document
 \t-u(url) <target>\t\tset url
