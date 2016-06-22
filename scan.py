@@ -5,7 +5,7 @@
 from sys import version_info
 import requests,socket
 import result
-from config import max_status_code
+from config import max_status_code,timeout
 if version_info.major == 3:
     from printf.py3 import printf,printweb
 else:
