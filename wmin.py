@@ -3,7 +3,7 @@ from sys import argv,version_info
 import scan
 import os
 import time
-
+from config import timeout
 help_doc = """ 
 This is help document
 \t-u(url) <target>\t\tset url
@@ -23,7 +23,6 @@ Website : https://github.com/magician333/wmin
 """
 
 result_file = ""
-timeout = 0.4
 proxy = None
 ua = None
 ignore_text = ""
@@ -86,7 +85,6 @@ else:
                 printf("-t No argv!","error")
 
         elif "-p" == argv[i]:  # set proxy
-
             try:
 
                 try:

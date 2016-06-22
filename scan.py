@@ -5,7 +5,7 @@
 from sys import version_info
 import requests,socket
 import result
-
+from config import max_status_code
 if version_info.major == 3:
     from printf.py3 import printf,printweb
 else:
@@ -32,7 +32,7 @@ def web_deal(web):
         pass
     return prweb,without_web
 
-def get_info(web,timeout=0.4,proxy=None,ua=None):
+def get_info(web,timeout=timeout,proxy=None,ua=None):
     try:
         printf("Server:\t"+requests.get(web_deal(web)[0],timeout=timeout,proxies=proxy,headers=ua).headers["Server"],"normal")
     except:
@@ -61,13 +61,17 @@ def dic_scan(web, dictionary_loc, export_filename="", to=0.4, proxy=None,ua=None
             web = web + "/" + line
 
         try:
+
+            def output(code,web):
+                printweb(code,web)
+                if code < max_status_code:
+                    result.export_result(export_filename, web,web+"---"+str(code))
+
             code = requests.get(web, timeout=to,proxies=proxy,headers=ua).status_code
             if "" != ignore_text and ignore_text not in requests.get(web).text:
-                printweb(code,web)
-                result.export_result(export_filename, web,web+"---"+str(code))
+                output(code,web)
             elif "" == ignore_text:
-                printweb(code,web)
-                result.export_result(export_filename, web,web+"---"+str(code))
+                output(code,web)
             else:
                 pass
         except:
