@@ -59,13 +59,11 @@ def dic_scan(web, dictionary_loc, export_filename="", to=0.4, proxy=None,ua=None
             web = web + line
         else:
             web = web + "/" + line
-
         try:
-
             def output(code,web):
                 printweb(code,web)
                 if code < max_status_code:
-                    result.export_result(export_filename, web,web+"---"+str(code))
+                    result.export_result(export_filename, web,web+"\t"+str(code))
 
             code = requests.get(web, timeout=to,proxies=proxy,headers=ua).status_code
             if "" != ignore_text and ignore_text not in requests.get(web).text:
@@ -74,8 +72,11 @@ def dic_scan(web, dictionary_loc, export_filename="", to=0.4, proxy=None,ua=None
                 output(code,web)
             else:
                 pass
+        except KeyboardInterrupt:
+            break
+            exit()
         except:
-            printf(web+"\t\t\tConnect wrong!!!","error")
+            printf(web+"\t\t\tConnet wrong!!!","error")
 
         web = web[0:web_length]
         line = dic_f.readline()

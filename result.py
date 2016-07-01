@@ -25,16 +25,32 @@ def initialize_webframe(filename):  # init the web form
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
 	<title>WMIN result</title>
+    <style type="text/css">
+    <!--
+    a:link {
+        text-decoration: none;
+    }
+    a:visited {
+        text-decoration: none;
+    }
+    a:hover {
+        text-decoration: none;
+    }
+    a:active {
+        text-decoration: none;
+    }
+    -->
+    </style>
 	</head>
 	<body>
 
-	<center>
-	<h1>
+	<left>
+	<h3>
 	<b>
-	Website Miner
+	WMIN v1.0 scan report
 	</b>
-	</h1>
-	</center>
+	</h3>
+	</left>
 
 	</body>
 </html>"""
