@@ -44,9 +44,9 @@ def get_info(web,timeout=timeout,proxy=None,ua=None):
 
 def dic_scan(web, dictionary_loc, export_filename="", to=0.4, proxy=None,ua=None,ignore_text=""):
     if 0 == len(export_filename):
-        export_filename = web
+        export_filename = web_deal(web)[1]
     web = web_deal(web)[0]
-    export_filename = result.initialize_webframe(web_deal(web)[1])  # use result to create web form
+    export_filename = result.initialize_webframe(export_filename)  # use result to create web form
 
     dic_f = open(dictionary_loc)  # open dictionary
     line = dic_f.readline()
