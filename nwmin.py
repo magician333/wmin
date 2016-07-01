@@ -55,7 +55,6 @@ if __name__ == "__main__":
     arg.add_argument("-m",type=int,help="set mutliprogress    *No development now")
     arg.add_argument("-a",type=str,help="set User-Agent")
     arg.add_argument("-i",type=str,help="set ignore text")
-    arg.add_argument("-v",type=str,help="show version and information")
 
     args = arg.parse_args()
     para = vars(args)
