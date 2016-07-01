@@ -2,7 +2,7 @@ import argparse
 import os
 import scan
 from sys import version_info
-from config import timeout
+from config import timeout,default_ua
 
 if version_info.major == 3:
     from printf.py3 import printf
@@ -39,10 +39,11 @@ def build_proxy(proxy=None):
 
 def build_ua(ua=None):
     if ua != None:
-        ua = {"User-Agent":argv[i+1]}
+        ua = {"User-Agent":ua}
         return ua
     else:
-        return None
+        ua = {"User-Agent":default_ua}
+        return ua
 
 if __name__ == "__main__":
     arg = argparse.ArgumentParser()

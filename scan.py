@@ -5,7 +5,7 @@
 from sys import version_info
 import requests,socket
 import result
-from config import max_status_code,timeout
+from config import max_status_code,timeout,default_ua
 if version_info.major == 3:
     from printf.py3 import printf,printweb
 else:
@@ -34,7 +34,7 @@ def web_deal(web):
 
 def get_info(web,timeout=timeout,proxy=None,ua=None):
     try:
-        printf("Server:\t"+requests.get(web_deal(web)[0],timeout=timeout,proxies=proxy,headers=ua).headers["Server"],"normal")
+        printf("Server:\t"+requests.get(web_deal(web)[0],timeout=timeout,proxies=proxy,headers=None).headers["Server"],"normal")
     except:
         printf("Can\'t get server,Connect wrong","error")
     try:
