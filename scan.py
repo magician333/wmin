@@ -42,13 +42,16 @@ def get_info(web,timeout=timeout,proxy=None,ua=None):
     except:
         printf("Can\'t get ip,Connect wrong","error")
 
-def dic_scan(web, dictionary_loc, export_filename="", to=0.4, proxy=None,ua=None,ignore_text=""):
+
+
+
+def dic_scan(web, dictionary, export_filename="", to=0.4, proxy=None,ua=None,ignore_text=""):
     if 0 == len(export_filename):
         export_filename = web_deal(web)[1]
     web = web_deal(web)[0]
     export_filename = result.initialize_webframe(export_filename)  # use result to create web form
 
-    dic_f = open(dictionary_loc)  # open dictionary
+    dic_f = open(dictionary)  # open dictionary
     line = dic_f.readline()
     web_length = len(web)
 
@@ -82,3 +85,10 @@ def dic_scan(web, dictionary_loc, export_filename="", to=0.4, proxy=None,ua=None
         line = dic_f.readline()
         if line == None:
             break
+
+
+
+
+def urls_scan(urls, dictionary_loc, export_filename="", timeout=0.4, proxy=None,ua=None,ignore_text=""):
+    for url in open(urls).readlines():
+        dic_scan(url.strip("\n"), dictionary_loc, export_filename, to=timeout, proxy=proxy,ua=ua,ignore_text=ignore_text)

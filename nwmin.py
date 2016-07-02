@@ -45,11 +45,33 @@ def build_ua(ua=None):
         ua = {"User-Agent":default_ua}
         return ua
 
+def get_urls(urls):
+    if urls != None:
+        if os.path.isfile(urls):
+            return urls
+        else:
+            printf("Urls file not exists!","error")
+            return None
+    else:
+        return None
+
+def get_dicts(dicts):
+    if dicts != None:
+        if os.path.isdir(dicts):
+            return dicts
+        else:
+            printf("Dictionary folder not exists!","warning")
+            return None
+    else:
+        return None
+
 if __name__ == "__main__":
     arg = argparse.ArgumentParser()
 
     arg.add_argument("-u",type=str,help="set target url")
+    arg.add_argument("-U",type=str,help="set urls file")
     arg.add_argument("-d",type=str,help="set dictionary")
+    arg.add_argument("-D",type=str,help="set dictionary folder")
     arg.add_argument("-f",type=str,help="set output filename")
     arg.add_argument("-t",type=float,help="set timeout")
     arg.add_argument("-p",type=str,help="set proxy    *format:  ip:port~type")
@@ -61,14 +83,22 @@ if __name__ == "__main__":
     para = vars(args)
 
     url = para["u"]
+    urls = get_urls(para["U"])
     dictionary = check_dic(para["d"])
+    dictionarys = get_dicts(para["D"])
     result_file = build_nts(para["f"])
     timeout = para["t"]
     proxy = build_proxy(para["p"])
     ua = build_ua(para["a"])
     ignore_text = build_nts(para["i"])
-    
-    if url and dictionary:
-        scan.dic_scan(url, dictionary, result_file, timeout, proxy,ua,ignore_text)
-    elif url and dictionary == "":
-        scan.get_info(url,timeout,proxy,ua)
+
+
+    if url and urls:
+        printf("Parameter make an error,just support a kind of set url function","error")
+    else:
+        if url and dictionary:
+            scan.dic_scan(url, dictionary, result_file, timeout, proxy,ua,ignore_text)
+        elif url and dictionary == "":
+            scan.get_info(url,timeout,proxy,ua)
+        elif urls and dictionary:
+            scan.urls_scan(urls, dictionary, result_file, timeout, proxy,ua,ignore_text)
