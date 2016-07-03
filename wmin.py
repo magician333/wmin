@@ -107,6 +107,8 @@ if __name__ == "__main__":
     else:
         if url and dictionary == "" and dictionarys == None:
             scan.get_info(url, timeout, proxy, ua)
+        elif urls and dictionary == "" and dictionarys == None:
+            scan.gets_info(urls, timeout, proxy, ua)
         elif url and dictionary:
             scan.scan(url, dictionary, result.init_webframe(para["r"], url), timeout, proxy, ua, ignore_text)
         elif urls and dictionary:

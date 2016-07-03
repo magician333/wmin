@@ -35,6 +35,7 @@ def web_deal(web):
     return prweb,without_web
 
 def get_info(web,timeout=timeout,proxy=None,ua=None):
+    printf("Domain:\t"+web_deal(web)[0],"normal")
     try:
         printf("Server:\t"+requests.get(web_deal(web)[0],timeout=timeout,proxies=proxy,headers=None).headers["Server"],"normal")
     except:
@@ -45,6 +46,10 @@ def get_info(web,timeout=timeout,proxy=None,ua=None):
         printf("Can\'t get ip,Connect wrong","error")
 
 
+
+def gets_info(urls, timeout=timeout, proxy=None, ua=None):
+    for url in open(urls).readlines():
+        get_info(url.strip("\n"), timeout, proxy, ua)
 
 def scan(web, dictionary, export_filename="", to=0.4, proxy=None,ua=None,ignore_text=""):
     web = web_deal(web)[0]
