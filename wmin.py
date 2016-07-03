@@ -102,7 +102,7 @@ if __name__ == "__main__":
 
     if (url and urls) or (dictionary and dictionarys):
         printf("Parameter make an error,just support a kind of set function","error")
-    elif urls and para["f"]:
+    elif urls and para["r"]:
         printf("If you set URLS,you can not set the output filename","error")
     else:
         if url and dictionary == "" and dictionarys == None:
