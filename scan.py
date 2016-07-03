@@ -6,6 +6,8 @@ from sys import version_info
 import requests,socket
 import result
 from config import max_status_code,timeout,default_ua
+import os
+
 if version_info.major == 3:
     from printf.py3 import printf,printweb
 else:
@@ -44,18 +46,11 @@ def get_info(web,timeout=timeout,proxy=None,ua=None):
 
 
 
-
-def dic_scan(web, dictionary, export_filename="", to=0.4, proxy=None,ua=None,ignore_text=""):
-    if 0 == len(export_filename):
-        export_filename = web_deal(web)[1]
+def scan(web, dictionary, export_filename="", to=0.4, proxy=None,ua=None,ignore_text=""):
     web = web_deal(web)[0]
-    export_filename = result.initialize_webframe(export_filename)  # use result to create web form
-
-    dic_f = open(dictionary)  # open dictionary
-    line = dic_f.readline()
     web_length = len(web)
 
-    while line:  # read one line by line
+    for line in open(dictionary).readlines():
         line = line.strip('\n')  # remove the line feed
 
         if line.startswith("/"):
@@ -63,6 +58,7 @@ def dic_scan(web, dictionary, export_filename="", to=0.4, proxy=None,ua=None,ign
         else:
             web = web + "/" + line
         try:
+
             def output(code,web):
                 printweb(code,web)
                 if code < max_status_code:
@@ -82,13 +78,24 @@ def dic_scan(web, dictionary, export_filename="", to=0.4, proxy=None,ua=None,ign
             printf(web+"\t\t\tConnet wrong!!!","error")
 
         web = web[0:web_length]
-        line = dic_f.readline()
-        if line == None:
-            break
 
 
 
-
-def urls_scan(urls, dictionary_loc, export_filename="", timeout=0.4, proxy=None,ua=None,ignore_text=""):
+def urls_scan(urls, dictionary_loc, timeout=0.4, proxy=None,ua=None,ignore_text=""):
     for url in open(urls).readlines():
-        dic_scan(url.strip("\n"), dictionary_loc, export_filename, to=timeout, proxy=proxy,ua=ua,ignore_text=ignore_text)
+        scan(url.strip("\n"), dictionary_loc, result.init_webframe(None,url.strip("\n")), to=timeout, proxy=proxy,ua=ua,ignore_text=ignore_text)
+
+
+
+def dicts_scan(url, dict_folder, result_filename, timeout=0.4, proxy=None,ua=None,ignore_text=""):
+    for dictionary in os.listdir(dict_folder):
+        scan(url, dict_folder+"/"+dictionary, result_filename, to=timeout, proxy=proxy,ua=ua,ignore_text=ignore_text)
+
+
+
+def dicts_urls_scan(urls, dict_folder, result_filename, timeout=0.4, proxy=None,ua=None,ignore_text=""):
+    for url in open(urls).readlines():
+        for dictionary in os.listdir(dict_folder):
+            scan(url.strip("\n"), dict_folder+"/"+dictionary,result.init_webframe(None,url), to=timeout, proxy=proxy,ua=ua,ignore_text=ignore_text)
+
+

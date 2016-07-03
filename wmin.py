@@ -1,163 +1,117 @@
-# coding : utf-8
-from sys import argv,version_info
-import scan
+import argparse
 import os
-import time
-from config import timeout
-help_doc = """ 
-This is help document
-\t-u(url) <target>\t\tset url
-\t-d(dictionary) <target>\t\tset dictionary
-\t-f(filename) <target>\t\tset output filename
-\t-t(timeout) <target>\t\tset timeout\t*use float
-\t-p(proxy) <target>\t\tset proxy\t*Example: ip:port~type
-\t-m(mutliprogress) <target>\t\tset mutliprogress\t*use int
-\t-a(User-Agent) <target>\t\tset User-Agent
-\t-i(ignore_text) <target>\t\tset ignore text
-"""
-info = """
-Version : 1.0
-Developer : PurpleFire
-Orgization : YeYueHun Information Security Team
-Website : https://github.com/magician333/wmin
-"""
-
-result_file = ""
-proxy = None
-ua = None
-ignore_text = ""
-url = ""
-dictionary = ""
-use_help = 0
-U = False
-D = False
+import scan
+import result
+from sys import version_info
+from config import timeout,default_ua
 
 if version_info.major == 3:
     from printf.py3 import printf
 else:
     from printf.py2 import printf
 
-if len(argv) <= 1:
-    printf(info)
-else:
-    argv.pop(0)  # delete the argv[0]
-    for i in range(0, len(argv)):
-        if "-u" == argv[i]:  # set url
-
-            try:
-                url = argv[i + 1]
-                U = True
-            except IndexError:
-                printf("-u No argv!","error")
-
-        elif "-d" == argv[i]:  # set dictionary
-            try:
-
-                dictionary = argv[i + 1]
-
-                try:
-                    open(dictionary)
-                    D = True
-                except FileNotFoundError:
-                    printf(dictionary + " not found","error")
-                    dictionary == None
-                    break
-                    
-            except IndexError:
-                printf("-d No argv!","error")
-
-        elif "-f" == argv[i]:  # set output filename
-            try:
-                result_file = argv[i + 1]
-            except IndexError:
-                printf("-f No argv!","error")
-
-        elif "-t" == argv[i]:  # set timeout
-
-            try:
-
-                try:
-                    timeout = float(argv[i + 1])
-                except ValueError:
-                    printf("Must use postitive float,will use default","warning")
-
-            except IndexError:
-                printf("-t No argv!","error")
-
-        elif "-p" == argv[i]:  # set proxy
-            try:
-
-                try:
-                    if ":" and "~" in argv[i+1]:
-                        proxy = dict({argv[i+1].split("~")[1]: argv[i+1].split(":")[0]+":"+argv[i+1].split("~")[0].split(":")[1]})
-                        """
-                        document:format:  IP:port~type
-                        """
-                    else:
-                        raise IndexError
-
-                except IndexError:
-                    printf("Type Wrong !!!,will use default","warning")
-                    proxy = None
-
-            except IndexError:
-                printf("-p No argv!","error")
-
-        elif "-m" == argv[i]:  # set maximum status_code to show
-
-            try:
-
-                try:
-                    mutliprogress = argv[i + 1]
-                except ValueError:
-                    printf("Must use postitive integer,will use default","warning")
-
-            except IndexError:
-                 printf("-m No argv!","error")
-
-        elif "-a" == argv[i]:	#set User-Agent
-
-            try:
-                ua = {"User-Agent":argv[i+1]}
-            except IndexError:
-                printf("-a No agrv!","error")
-
-        elif "-i" == argv[i]:   #set ignore text
-
-            try:
-                ignore_text = argv[i+1]
-            except IndexError:
-                printf("-i No argv!","error")
-
-        elif "-h" == argv[i]:
-            printf(help_doc)
-        
-        elif "-v" == argv[i]:
-            printf(info)
-
-        elif 0 == len(argv):
-            printf("Please enter the argv!","warning")
-
-        else:
-
-            if argv[i - 1] in ["-u", "-d", "-f", "-t", "-p","-a","-i","-m"]:
-                pass
-            else:
-                printf("Can't find argv: " + argv[i],"warning")
-
-    for para_test in argv:
-
-        if argv.count(para_test)>1:
-            printf("Have two same argv "+para_test,"error")
-            U = False
-            D = False
-
-    if 0 == len(result_file):
-        result_file == ""
-
-    if U ==True and D == True:
-        scan.dic_scan(url, dictionary, result_file, timeout, proxy,ua,ignore_text)
-    elif U == True and D == False:
-        scan.get_info(url,timeout,proxy,ua)
+def check_dic(dic):
+    if dic != None:
+        try:
+            open(dic)
+            return dic
+        except FileNotFoundError:
+            printf("Dictionary not found","error")
+            return None
     else:
-        pass
+        return ""
+
+def build_result(string,url):
+    if string == None:
+        filename = scan.web_deal(url)[1]
+    else:
+        filename = string
+    return result.init_webframe(filename)
+
+def build_proxy(proxy=None):
+    if proxy != None:
+        if ":" and "~" in proxy:
+            proxy = dict({argv[i+1].split("~")[1]: argv[i+1].split(":")[0]+":"+argv[i+1].split("~")[0].split(":")[1]})
+            return proxy
+        else:
+            printf("Type wrong!","warning")
+            return None
+    else:
+        return None
+
+def build_ua(ua=None):
+    if ua != None:
+        ua = {"User-Agent":ua}
+        return ua
+    else:
+        ua = {"User-Agent":default_ua}
+        return ua
+
+def get_urls(urls):
+    if urls != None:
+        if os.path.isfile(urls):
+            return urls
+        else:
+            printf("Urls file not exists!","error")
+            return None
+    else:
+        return None
+
+def get_dicts(dicts):
+    if dicts != None:
+        if os.path.isdir(dicts):
+            return dicts
+        else:
+            printf("Dictionary folder not exists!","warning")
+            return None
+    else:
+        return None
+def build_nts(string):
+    if string == None:
+        return ""
+    else:
+        return string
+
+
+if __name__ == "__main__":
+    arg = argparse.ArgumentParser(description="Website Miner(网站矿工)")
+
+    arg.add_argument("-u",type=str,help="set target url")
+    arg.add_argument("-U",type=str,help="set urls file")
+    arg.add_argument("-d",type=str,help="set dictionary")
+    arg.add_argument("-D",type=str,help="set dictionary folder")
+    arg.add_argument("-r",type=str,help="set report filename")
+    arg.add_argument("-t",type=float,help="set timeout")
+    arg.add_argument("-p",type=str,help="set proxy    *format:  ip:port~type")
+    arg.add_argument("-m",type=int,help="set mutliprogress    *No development now")
+    arg.add_argument("-a",type=str,help="set User-Agent")
+    arg.add_argument("-i",type=str,help="set ignore text")
+
+    args = arg.parse_args()
+    para = vars(args)
+
+    url = para["u"]
+    urls = get_urls(para["U"])
+    dictionary = check_dic(para["d"])
+    dictionarys = get_dicts(para["D"])
+    timeout = para["t"]
+    proxy = build_proxy(para["p"])
+    ua = build_ua(para["a"])
+    ignore_text = build_nts(para["i"])
+
+
+    if (url and urls) or (dictionary and dictionarys):
+        printf("Parameter make an error,just support a kind of set function","error")
+    elif urls and para["f"]:
+        printf("If you set URLS,you can not set the output filename","error")
+    else:
+        if url and dictionary == "" and dictionarys == None:
+            scan.get_info(url, timeout, proxy, ua)
+        elif url and dictionary:
+            scan.scan(url, dictionary, result.init_webframe(para["r"], url), timeout, proxy, ua, ignore_text)
+        elif urls and dictionary:
+            scan.urls_scan(urls, dictionary, timeout, proxy, ua, ignore_text)
+        elif url and dictionarys:
+            scan.dicts_scan(url, dictionarys, result.init_webframe(para["r"],url), timeout, proxy, ua, ignore_text)
+        elif urls and dictionarys:
+            scan.dicts_urls_scan(urls, dictionarys, timeout, proxy, ua, ignore_text)

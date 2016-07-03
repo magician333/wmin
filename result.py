@@ -1,4 +1,7 @@
 from sys import version_info
+import os
+import scan
+
 
 if version_info.major == 3:
     from printf.py3 import printf
@@ -19,7 +22,14 @@ def export_result(export_file, web,web_text):  # export result file
     export_f.close()
 
 
-def initialize_webframe(filename):  # init the web form
+def init_webframe(filename, url):  # init the web form
+    if os.path.exists("output"):
+        pass
+    else:
+        try:
+            os.mkdir("ouput")
+        except FileExistsError:
+            pass
     web_frame = """<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
 "http://www.w3.org/TR/html4/loose.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -54,8 +64,9 @@ def initialize_webframe(filename):  # init the web form
 
 	</body>
 </html>"""
-
-    export_filename = filename + ".html"  # set output filename
+    if filename == None:
+        filename = scan.web_deal(url)[1]
+    export_filename = "ouput/"+filename + ".html"  # set output filename
     try:
         export_file = open(export_filename, "w")  # use write to open file
     except:
