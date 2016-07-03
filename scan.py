@@ -96,6 +96,6 @@ def dicts_scan(url, dict_folder, result_filename, timeout=0.4, proxy=None,ua=Non
 def dicts_urls_scan(urls, dict_folder, result_filename, timeout=0.4, proxy=None,ua=None,ignore_text=""):
     for url in open(urls).readlines():
         for dictionary in os.listdir(dict_folder):
-            scan(url.strip("\n"), dict_folder+"/"+dictionary,result.init_webframe(None,url), to=timeout, proxy=proxy,ua=ua,ignore_text=ignore_text)
+            scan(url.strip("\n"), dict_folder+"/"+dictionary,result.init_webframe(None,url.strip("\n")), to=timeout, proxy=proxy,ua=ua,ignore_text=ignore_text)
 
 
