@@ -1,11 +1,10 @@
 # coding:utf-8
-# 本程序由紫火编写
-# program by purplefire
 
 from sys import version_info
-import requests,socket
+import requests
 import result
-from config import max_status_code,timeout,default_ua
+import addon
+from config import max_status_code,timeout
 import os
 
 if version_info.major == 3:
@@ -13,46 +12,8 @@ if version_info.major == 3:
 else:
     from printf.py2 import printf,printweb
 
-
-def web_deal(web):
-
-    if web.startswith("http://"):
-        prweb = web
-        without_web = web[7:]
-    elif web.startswith("https://"):
-        prweb = web
-        without_web = web[8:]
-    else:
-        prweb = "http://" + web
-        without_web = web
-
-    if web.endswith("/"):
-        prweb = web[:-1]
-        without_web = web[:-1]
-    else:
-        #prweb = web
-        pass
-    return prweb,without_web
-
-def get_info(web,timeout=timeout,proxy=None,ua=None):
-    printf("Domain:\t"+web_deal(web)[0],"normal")
-    try:
-        printf("Server:\t"+requests.get(web_deal(web)[0],timeout=timeout,proxies=proxy,headers=None).headers["Server"],"normal")
-    except:
-        printf("Can\'t get server,Connect wrong","error")
-    try:
-        printf("IP:\t"+socket.gethostbyname(web_deal(web)[1]),"normal")
-    except:
-        printf("Can\'t get ip,Connect wrong","error")
-
-
-
-def gets_info(urls, timeout=timeout, proxy=None, ua=None):
-    for url in open(urls).readlines():
-        get_info(url.strip("\n"), timeout, proxy, ua)
-
 def scan(web, dictionary, export_filename="", to=0.4, proxy=None,ua=None,ignore_text=""):
-    web = web_deal(web)[0]
+    web = addon.web_deal(web)[0]
     web_length = len(web)
 
     for line in open(dictionary).readlines():

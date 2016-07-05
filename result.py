@@ -1,6 +1,6 @@
 from sys import version_info
 import os
-import scan
+import addon
 
 
 if version_info.major == 3:
@@ -65,7 +65,7 @@ def init_webframe(filename, url):  # init the web form
 	</body>
 </html>"""
     if filename == None:
-        filename = scan.web_deal(url)[1]
+        filename = addon.web_deal(url)[1]
     export_filename = "ouput/"+filename + ".html"  # set output filename
     try:
         export_file = open(export_filename, "w")  # use write to open file
