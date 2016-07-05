@@ -2,6 +2,14 @@ import os
 import random
 import linecache
 from config import default_ua
+from sys import version_info
+
+if version_info.major == 3:
+    from printf.py3 import printf
+else:
+    from printf.py2 import printf
+
+
 def get_random_line(filename):
     random_line = linecache.getline(filename,random.randint(1,len(open(filename).readlines()))).strip("\n")
     return random_line
@@ -45,38 +53,51 @@ def build_result(string,url):
         filename = string
     return result.init_webframe(filename)
 
-def build_proxy(proxy=None):
-    if proxy != None:
-        if ":" and "~" in proxy:
-            proxy = dict({argv[i+1].split("~")[1]: argv[i+1].split(":")[0]+":"+argv[i+1].split("~")[0].split(":")[1]})
-            return proxy
+def build_proxy(proxy, proxys):
+    if proxys == None:
+        if proxy != None:
+            if ":" and "~" in proxy:
+                #proxy : ip:port@type
+                proxy = dict({proxy.split("@")[1]: proxy.split(":")[0]+":"+proxy.split("@")[0].split(":")[1]})
+                return proxy
+            else:
+                printf("Type wrong!","warning")
+                return None
         else:
-            printf("Type wrong!","warning")
+            return None
+    else:
+        return proxys
+
+def build_ua(ua, uas):
+    if uas == None:
+        if ua != None:
+            ua = {"User-Agent":ua}
+        else:
+            ua = {"User-Agent":default_ua}
+        return ua
+    else:
+        return uas
+
+def test_file(filename):
+    if filename != None:
+        if os.path.isfile(filename):
+            return filename
+        else:
+            printf(filename+" not exists!","error")
+            exit()
             return None
     else:
         return None
 
-def build_ua(ua=None):
-    if ua != None:
-        ua = {"User-Agent":ua}
-    else:
-        ua = {"User-Agent":default_ua}
-    return ua
-
-def get_urls(urls):
-    if urls != None:
-        if os.path.isfile(urls):
-            return urls
-        else:
-            printf("Urls file not exists!","error")
-            return None
-    else:
-        return None
-
-def get_dicts(dicts):
+def test_dicts(dicts):
     if dicts != None:
         if os.path.isdir(dicts):
             return dicts
+        else:
+            printf("Dictionary folder not exists","error")
+            return None
+    else:
+        return None
 
 def build_nts(string):
     if string == None:

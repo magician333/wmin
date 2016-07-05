@@ -28,7 +28,7 @@ def init_webframe(filename, url):  # init the web form
     else:
         try:
             os.mkdir("ouput")
-        except FileExistsError:
+        except:
             pass
     web_frame = """<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
 "http://www.w3.org/TR/html4/loose.dtd">

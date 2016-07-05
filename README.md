@@ -26,14 +26,20 @@ Wmin(Website Miner)是夜月魂信息安全团队-**紫火**和**10087**使用�
 -t(timeout) <target>
 设置超时(注意:使用浮点数)
 
--p(proxy) <target>   
-设置IP代理(格式: ip:port~type)
+-p(proxy) <target>
+设置IP代理(格式: ip:port@type)
+
+-P(Proxy file) <target>
+设置IP代理文件路径
 
 -m(mutliprogress) <target>
 设置多进程(暂未开发)
 
 -a(User-Agent) <target>
-设置用户代理UA
+设置UA
+
+-A(User-Agent file)
+设置UA文件
 
 -i(ignore_text) <target>
 设置忽略页面包含的文本
@@ -44,7 +50,7 @@ Wmin(Website Miner)是夜月魂信息安全团队-**紫火**和**10087**使用�
 ------
 * 如果不指定扫描报告结果文件名,文件名则默认为网站url
 * 扫描报告一律生成在output文件夹下
-* 多url批量扫描和单url扫描不能同时进行
+* 相同功能的大小写参数不能同时进行
 * 多url文件要求每个url占一行,必须是文本文件
 * 如果使用了批量url扫描则不能设置结果输出文件名
 * 多字典要求指定一个字典目录,目录下必须放置文本字典文件

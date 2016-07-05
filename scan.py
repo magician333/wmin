@@ -13,11 +13,16 @@ else:
     from printf.py2 import printf,printweb
 
 def scan(web, dictionary, export_filename="", to=0.4, proxy=None,ua=None,ignore_text=""):
+    
+
     web = addon.web_deal(web)[0]
     web_length = len(web)
 
     for line in open(dictionary).readlines():
+
+        
         line = line.strip('\n')  # remove the line feed
+
 
         if line.startswith("/"):
             web = web + line
@@ -29,6 +34,11 @@ def scan(web, dictionary, export_filename="", to=0.4, proxy=None,ua=None,ignore_
                 printweb(code,web)
                 if code < max_status_code:
                     result.export_result(export_filename, web,web+"\t"+str(code))
+
+            if type(ua) == str:
+                ua = addon.build_ua(addon.get_random_line(ua),None)
+            if type(proxy) == str:
+                proxy = addon.build_proxy(addon.get_random_line(proxy),None)  
 
             code = requests.get(web, timeout=to,proxies=proxy,headers=ua).status_code
             if "" != ignore_text and ignore_text not in requests.get(web).text:
@@ -44,7 +54,7 @@ def scan(web, dictionary, export_filename="", to=0.4, proxy=None,ua=None,ignore_
             printf(web+"\t\t\tConnet wrong!!!","error")
 
         web = web[0:web_length]
-
+    printf("")
 
 
 def urls_scan(urls, dictionary_loc, timeout=0.4, proxy=None,ua=None,ignore_text=""):
@@ -59,9 +69,8 @@ def dicts_scan(url, dict_folder, result_filename, timeout=0.4, proxy=None,ua=Non
 
 
 
-def dicts_urls_scan(urls, dict_folder, result_filename, timeout=0.4, proxy=None,ua=None,ignore_text=""):
+def dicts_urls_scan(urls, dict_folder, timeout=0.4, proxy=None,ua=None,ignore_text=""):
     for url in open(urls).readlines():
         for dictionary in os.listdir(dict_folder):
             scan(url.strip("\n"), dict_folder+"/"+dictionary,result.init_webframe(None,url.strip("\n")), to=timeout, proxy=proxy,ua=ua,ignore_text=ignore_text)
-
 

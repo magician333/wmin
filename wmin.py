@@ -15,7 +15,7 @@ else:
 
 
 if __name__ == "__main__":
-    arg = argparse.ArgumentParser(description="Website Miner(网站矿工)")
+    arg = argparse.ArgumentParser(description="Website Miner")
 
     arg.add_argument("-u",type=str,help="set target url")
     arg.add_argument("-U",type=str,help="set urls file")
@@ -24,20 +24,24 @@ if __name__ == "__main__":
     arg.add_argument("-r",type=str,help="set report filename")
     arg.add_argument("-t",type=float,help="set timeout")
     arg.add_argument("-p",type=str,help="set proxy    *format:  ip:port~type")
+    arg.add_argument("-P",type=str,help="set proxy file,random read")
     arg.add_argument("-m",type=int,help="set mutliprogress    *No development now")
     arg.add_argument("-a",type=str,help="set User-Agent")
+    arg.add_argument("-A",type=str,help="set User-Agent file,random read")
     arg.add_argument("-i",type=str,help="set ignore text")
 
     args = arg.parse_args()
     para = vars(args)
 
     url = para["u"]
-    urls = addon.get_urls(para["U"])
+    urls = addon.test_file(para["U"])
     dictionary = addon.check_dic(para["d"])
-    dictionarys = addon.get_dicts(para["D"])
+    dictionarys = addon.test_dicts(para["D"])
     timeout = para["t"]
-    proxy = addon.build_proxy(para["p"])
-    ua = addon.build_ua(para["a"])
+    proxys = addon.test_file(para["P"])
+    proxy = addon.build_proxy(para["p"], proxys)
+    uas = addon.test_file(para["A"])
+    ua = addon.build_ua(para["a"], uas)
     ignore_text = addon.build_nts(para["i"])
 
 
@@ -57,4 +61,4 @@ if __name__ == "__main__":
         elif url and dictionarys:
             scan.dicts_scan(url, dictionarys, result.init_webframe(para["r"],url), timeout, proxy, ua, ignore_text)
         elif urls and dictionarys:
-            scan.dicts_urls_scan(urls, dictionarys, timeout, proxy, ua, ignore_text)
+           scan.dicts_urls_scan(urls, dictionarys, timeout, proxy, ua, ignore_text)
