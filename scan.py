@@ -13,12 +13,24 @@ else:
     from printf.py2 import printf,printweb
 
 def scan(web, dictionary, export_filename="", to=0.4, proxy=None,ua=None,ignore_text=""):
-    
+    if type(ua) == str:
+        uas = ua
+    else:
+        uas = None
+    if type(proxy) == str:
+        proxys = proxy
+    else:
+        proxys = None
 
     web = addon.web_deal(web)[0]
     web_length = len(web)
 
     for line in open(dictionary).readlines():
+
+        if type(uas) == str:
+            ua = addon.build_ua(addon.get_random_line(uas),None)
+        if type(proxys) == str:
+            proxy = addon.build_proxy(addon.get_random_line(proxys),None)  
 
         
         line = line.strip('\n')  # remove the line feed
@@ -35,10 +47,6 @@ def scan(web, dictionary, export_filename="", to=0.4, proxy=None,ua=None,ignore_
                 if code < max_status_code:
                     result.export_result(export_filename, web,web+"\t"+str(code))
 
-            if type(ua) == str:
-                ua = addon.build_ua(addon.get_random_line(ua),None)
-            if type(proxy) == str:
-                proxy = addon.build_proxy(addon.get_random_line(proxy),None)  
 
             code = requests.get(web, timeout=to,proxies=proxy,headers=ua).status_code
             if "" != ignore_text and ignore_text not in requests.get(web).text:
