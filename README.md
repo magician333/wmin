@@ -61,10 +61,10 @@ Wmin(Website Miner)是夜月魂信息安全团队-**紫火**和**10087**使用�
 ------
 * 对于一个网站只指定了URL,Wmin将探测网站的IP地址和服务器类型
 
-* Wmin使用彩色输出，建议在Linux/Unix下使用
+* Wmin使用彩色输出，建议在Linux/Unix下使用,Win32下目前无法正常输出颜色
 
-* Wmin使用动态导入功能，Python2.x和Python3.x都可运行，但要求版本大于2.5
+* Wmin使用动态导入功能，Python2.x和Python3.x都可运行，但要求Python版本大于2.5
 
-* Wmin依赖包：requests,colorama（可使用pip安装)
+* Wmin依赖包：requests,colorama (请自行安装，后期考虑加入程序自带)
 
 如果bug反馈请发送邮件至magician33333@163.com
