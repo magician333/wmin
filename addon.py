@@ -54,29 +54,38 @@ def build_result(string,url):
     return result.init_webframe(filename)
 
 def build_proxy(proxy, proxys):
-    if proxys == None:
-        if proxy != None:
-            if ":" and "~" in proxy:
-                #proxy : ip:port@type
-                proxy = dict({proxy.split("@")[1]: proxy.split(":")[0]+":"+proxy.split("@")[0].split(":")[1]})
-                return proxy
+    if proxy != None and proxys != None:
+        printf("Parameter make an error,just support a kind of set function","error")
+        exit()
+    else:
+        if proxys == None:
+            if proxy != None:
+                if ":" and "~" in proxy:
+                    #proxy : ip:port@type
+                    proxy = dict({proxy.split("@")[1]: proxy.split(":")[0]+":"+proxy.split("@")[0].split(":")[1]})
+                    return proxy
+                else:
+                    printf("Type wrong!","warning")
+                    return None
             else:
-                printf("Type wrong!","warning")
                 return None
         else:
-            return None
-    else:
-        return proxys
+            return proxys
 
 def build_ua(ua, uas):
-    if uas == None:
-        if ua != None:
-            ua = {"User-Agent":ua}
-        else:
-            ua = {"User-Agent":default_ua}
-        return ua
+    if ua != None and uas != None:
+        printf("Parameter make an error,just support a kind of set function","error")
+        exit()
     else:
-        return uas
+        if uas == None:
+            if ua != None:
+                ua = {"User-Agent":ua}
+            else:
+                ua = {"User-Agent":default_ua}
+            return ua
+        else:
+            return uas
+        
 
 def test_file(filename):
     if filename != None:
