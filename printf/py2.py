@@ -1,4 +1,6 @@
-from colorama import Fore
+from colorama import Fore,init
+
+init(autoreset=True)
 
 def printf(string,status = "blank"):
     
