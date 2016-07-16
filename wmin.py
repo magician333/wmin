@@ -15,20 +15,28 @@ else:
 
 
 if __name__ == "__main__":
-    arg = argparse.ArgumentParser(description="Website Miner")
 
-    arg.add_argument("-u",type=str,help="set target url")
-    arg.add_argument("-U",type=str,help="set urls file")
-    arg.add_argument("-d",type=str,help="set dictionary")
-    arg.add_argument("-D",type=str,help="set dictionary folder")
-    arg.add_argument("-r",type=str,help="set report filename")
-    arg.add_argument("-t",type=float,help="set timeout")
-    arg.add_argument("-p",type=str,help="set proxy    *format:  ip:port~type")
-    arg.add_argument("-P",type=str,help="set proxy file,random read")
-    arg.add_argument("-m",type=int,help="set mutliprogress    *No development now")
-    arg.add_argument("-a",type=str,help="set User-Agent")
-    arg.add_argument("-A",type=str,help="set User-Agent file,random read")
-    arg.add_argument("-i",type=str,help="set ignore text")
+    usage = "wmin.py -u url -d dictionary [options]"
+    description = '''
+    Wmin is a web content discovery tool.
+    It makes requests and analyze the responses trying to figure out whether the
+    resource is or not accessible.
+    '''
+    epilog = "License, requests, etc: https://github.com/magician333/wmin"
+    arg = argparse.ArgumentParser(usage = usage,description= description ,epilog = epilog)
+
+    arg.add_argument("-u",type=str,help="set target url",metavar= "")
+    arg.add_argument("-U",type=str,help="set urls file",metavar= "")
+    arg.add_argument("-d",type=str,help="set dictionary",metavar= "")
+    arg.add_argument("-D",type=str,help="set dictionary folder",metavar= "")
+    arg.add_argument("-r",type=str,help="set report filename",metavar= "")
+    arg.add_argument("-t",type=float,help="set timeout",metavar= "")
+    arg.add_argument("-p",type=str,help="set proxy    *format:  ip:port@type",metavar= "")
+    arg.add_argument("-P",type=str,help="set proxy file,random read",metavar= "")
+    arg.add_argument("-m",type=int,help="set mutliprogress    *No development now",metavar= "")
+    arg.add_argument("-a",type=str,help="set User-Agent",metavar= "")
+    arg.add_argument("-A",type=str,help="set User-Agent file,random read",metavar= "")
+    arg.add_argument("-i",type=str,help="set ignore text default 404",default = '404',metavar= "")
 
     args = arg.parse_args()
     para = vars(args)
