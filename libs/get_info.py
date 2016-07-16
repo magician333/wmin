@@ -1,13 +1,13 @@
 import socket
-import requests
-import addon
-from config import timeout,default_ua
+from thirdparty import requests
+from . import addon
+from .config import timeout,default_ua
 from sys import version_info
 
 if version_info.major == 3:
-    from printf.py3 import printf
+    from .printf.py3 import printf
 else:
-    from printf.py2 import printf
+    from .printf.py2 import printf
 
 
 def get_info(web,timeout=timeout,proxy=None,ua=None):

@@ -32,8 +32,8 @@ Wmin(Website Miner)是夜月魂信息安全团队-**紫火**和**10087**使用�
 -P(Proxy file) <target>
 设置IP代理文件路径
 
--m(mutliprogress) <target>
-设置多进程(暂未开发)
+-m(method) <target>
+设置请求方式
 
 -a(User-Agent) <target>
 设置UA
@@ -55,14 +55,15 @@ Wmin(Website Miner)是夜月魂信息安全团队-**紫火**和**10087**使用�
 * 如果使用了批量url扫描则不能设置结果输出文件名
 * 多字典要求指定一个字典目录,目录下必须放置文本字典文件
 * 字典文件和多url批量处理文件的编码都必须是utf-8
+* 扫描目录的请求方式支持get,post,head
 
 
 其他
 ------
 * 对于一个网站只指定了URL,Wmin将探测网站的IP地址和服务器类型
 
-* Wmin使用动态导入功能，Python2.x和Python3.x都可运行，但要求Python版本大于2.5
+* Wmin使用动态导入功能，Python2.x和Python3.x都可运行，但要求Python版本大于2.5，但请您尽快使用Python3,未来本程序也将对Python2.x不再支持
 
-* Wmin依赖包：requests,colorama (请自行安装，后期考虑加入程序自带)
+* Wmin依赖包：requests,colorama (本程序已经自带)
 
 如果bug反馈请发送邮件至magician33333@163.com

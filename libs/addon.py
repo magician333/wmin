@@ -1,13 +1,13 @@
 import os
 import random
 import linecache
-from config import default_ua
+from .config import default_ua
 from sys import version_info
 
 if version_info.major == 3:
-    from printf.py3 import printf
+    from .printf.py3 import printf
 else:
-    from printf.py2 import printf
+    from .printf.py2 import printf
 
 
 def get_random_line(filename):
@@ -33,6 +33,12 @@ def web_deal(url):
         #prweb = web
         pass
     return prurl, without_url
+
+def filter_method(method):
+    if method.lower() not in ["get","post","head"]:
+        return None
+    else:
+        return method.lower()
 
 
 def check_dic(dic):
@@ -107,10 +113,4 @@ def test_dicts(dicts):
             return None
     else:
         return None
-
-def build_nts(string):
-    if string == None:
-        return ""
-    else:
-        return string
-        
+     

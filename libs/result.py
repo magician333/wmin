@@ -1,12 +1,12 @@
 from sys import version_info
 import os
-import addon
+from . import addon
 
 
 if version_info.major == 3:
-    from printf.py3 import printf
+    from .printf.py3 import printf
 else:
-    from printf.py2 import printf
+    from .printf.py2 import printf
 
 def export_result(export_file, web,web_text):  # export result file
     try:  # open file

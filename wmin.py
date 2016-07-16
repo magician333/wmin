@@ -1,16 +1,16 @@
 import argparse
 import os
-import result
-import scan
-import get_info
-import addon
+from libs import result
+from libs import scan
+from libs import get_info
+from libs import addon
 from sys import version_info
-from config import timeout,default_ua
+from libs.config import timeout,default_ua
 
 if version_info.major == 3:
-    from printf.py3 import printf
+    from libs.printf.py3 import printf
 else:
-    from printf.py2 import printf
+    from libs.printf.py2 import printf
 
 
 
@@ -33,7 +33,7 @@ if __name__ == "__main__":
     arg.add_argument("-t",type=float,help="set timeout",metavar= "")
     arg.add_argument("-p",type=str,help="set proxy    *format:  ip:port@type",metavar= "")
     arg.add_argument("-P",type=str,help="set proxy file,random read",metavar= "")
-    arg.add_argument("-m",type=int,help="set mutliprogress    *No development now",metavar= "")
+    arg.add_argument("-m",type=str,help="set method",default="get",metavar= "")
     arg.add_argument("-a",type=str,help="set User-Agent",metavar= "")
     arg.add_argument("-A",type=str,help="set User-Agent file,random read",metavar= "")
     arg.add_argument("-i",type=str,help="set ignore text default 404",default = '404',metavar= "")
@@ -50,23 +50,26 @@ if __name__ == "__main__":
     proxy = addon.build_proxy(para["p"], proxys)
     uas = addon.test_file(para["A"])
     ua = addon.build_ua(para["a"], uas)
-    ignore_text = addon.build_nts(para["i"])
+    ignore_text = para["i"]
+    method = addon.filter_method(para["m"])
 
 
     if (url and urls) or (dictionary and dictionarys):
         printf("Parameter make an error,just support a kind of set function","error")
     elif urls and para["r"]:
         printf("If you set URLS,you can not set the output filename","error")
+    elif method == None:
+        printf("HTTP method error,must use get/post/head","error")
     else:
         if url and dictionary == "" and dictionarys == None:
             get_info.get_info(url, timeout, proxy, ua)
         elif urls and dictionary == "" and dictionarys == None:
             get_info.gets_info(urls, timeout, proxy, ua)
         elif url and dictionary:
-            scan.scan(url, dictionary, result.init_webframe(para["r"], url), timeout, proxy, ua, ignore_text)
+            scan.scan(url, dictionary, result.init_webframe(para["r"], url), timeout, proxy, ua, ignore_text, method)
         elif urls and dictionary:
-            scan.urls_scan(urls, dictionary, timeout, proxy, ua, ignore_text)
+            scan.urls_scan(urls, dictionary, timeout, proxy, ua, ignore_text, method)
         elif url and dictionarys:
-            scan.dicts_scan(url, dictionarys, result.init_webframe(para["r"],url), timeout, proxy, ua, ignore_text)
+            scan.dicts_scan(url, dictionarys, result.init_webframe(para["r"],url), timeout, proxy, ua, ignore_text, method)
         elif urls and dictionarys:
-           scan.dicts_urls_scan(urls, dictionarys, timeout, proxy, ua, ignore_text)
+           scan.dicts_urls_scan(urls, dictionarys, timeout, proxy, ua, ignore_text, method)
