@@ -24,7 +24,7 @@ Wmin(Website Miner)是夜月魂信息安全团队-**紫火**和**10087**使用�
 设置输出报告文件名
 
 -t(timeout) <target>
-设置超时(注意:使用浮点数)
+设置超时(单位:秒)
 
 -p(proxy) <target>
 设置IP代理(格式: ip:port@type)
@@ -34,6 +34,9 @@ Wmin(Website Miner)是夜月魂信息安全团队-**紫火**和**10087**使用�
 
 -m(method) <target>
 设置请求方式
+
+-e(delay) <target>
+设置延迟(单位:秒)
 
 -a(User-Agent) <target>
 设置UA
