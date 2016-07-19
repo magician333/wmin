@@ -8,14 +8,16 @@ if version_info.major == 3:
 else:
     from .printf.py2 import printf
 
-def export_result(export_file, web,web_text):  # export result file
+
+def export_result(export_file, web, web_text):  # export result file
     try:  # open file
-        export_f = open(export_file, "a+") #use add to open file
+        export_f = open(export_file, "a+")  # use add to open file
         export_f.seek(274, 0)  # turn after to</center>
     except:
-        printf("Cann't export the result!!!","error")
+        printf("Cann't export the result!!!", "error")
         # set format to html
-    export_web = "<li><a href=\"{0}\" target=\"_blank\">{1}</a></li>".format(web, web_text)
+    export_web = "<li><a href=\"{0}\" target=\"_blank\">{1}</a></li>".format(
+        web, web_text)
     export_web_len = len(export_web)
     export_f.write(export_web)
     export_f.seek(0, 0)  # goto file's head
@@ -33,8 +35,8 @@ def init_webframe(filename, url):  # init the web form
     web_frame = """<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
 "http://www.w3.org/TR/html4/loose.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-	<head>
-	<title>WMIN result</title>
+    <head>
+    <title>WMIN result</title>
     <style type="text/css">
     <!--
     a:link {
@@ -51,26 +53,26 @@ def init_webframe(filename, url):  # init the web form
     }
     -->
     </style>
-	</head>
-	<body>
+    </head>
+    <body>
 
-	<left>
-	<h3>
-	<b>
-	WMIN v1.0 scan report
-	</b>
-	</h3>
-	</left>
+    <left>
+    <h3>
+    <b>
+    WMIN v1.0 scan report
+    </b>
+    </h3>
+    </left>
 
-	</body>
+    </body>
 </html>"""
     if filename == None:
         filename = addon.web_deal(url)[1]
-    export_filename = "ouput/"+filename + ".html"  # set output filename
+    export_filename = "ouput/" + filename + ".html"  # set output filename
     try:
         export_file = open(export_filename, "w")  # use write to open file
     except:
-        printf("result file can't be created!","error")
+        printf("result file can't be created!", "error")
     export_file.write(web_frame)  # write to web form
     export_file.close()
     return export_filename  # return filename
