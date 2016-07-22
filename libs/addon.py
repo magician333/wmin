@@ -6,8 +6,10 @@ from sys import version_info
 
 if version_info.major == 3:
     from .printf.py3 import printf
+    from urllib.parse import urlparse
 else:
     from .printf.py2 import printf
+    from urlparse import urlparse
 
 
 def get_random_line(filename):
@@ -18,23 +20,19 @@ def get_random_line(filename):
 
 def web_deal(url):
 
-    if url.startswith("http://"):
-        prurl = url
-        without_url = url[7:]
-    elif url.startswith("https://"):
-        prurl = url
-        without_url = url[8:]
+    protocol = urlparse(url).scheme
+    if protocol:
+        purl = url
+        hostname = urlparse(url).netloc
+        if url.endswith("/"):
+            purl = url[:-1]
+            hostname = url[:-1]
+        else:
+            pass
+        return purl, hostname
     else:
-        prurl = "http://" + url
-        without_url = url
-
-    if url.endswith("/"):
-        prurl = url[:-1]
-        without_url = url[:-1]
-    else:
-        #prweb = web
-        pass
-    return prurl, without_url
+        printf("Please enter url with protocl","error")
+        exit()
 
 
 def filter_method(method):

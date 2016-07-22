@@ -5,7 +5,7 @@ from . import result
 from . import addon
 from sys import version_info
 from thirdparty import requests
-from .config import max_status_code, timeout
+from .config import max_status_code
 
 
 if version_info.major == 3:

@@ -5,7 +5,6 @@ from libs import scan
 from libs import get_info
 from libs import addon
 from sys import version_info
-from libs.config import timeout, default_ua
 
 if version_info.major == 3:
     from libs.printf.py3 import printf
@@ -30,7 +29,7 @@ if __name__ == "__main__":
     arg.add_argument("-d", type=str, help="set dictionary", metavar="")
     arg.add_argument("-D", type=str, help="set dictionary folder", metavar="")
     arg.add_argument("-r", type=str, help="set report filename", metavar="")
-    arg.add_argument("-t", type=float, help="set timeout", metavar="")
+    arg.add_argument("-t", type=float, help="set timeout", metavar="",default=0.04)
     arg.add_argument(
         "-p", type=str, help="set proxy    *format:  ip:port@type", metavar="")
     arg.add_argument(
@@ -39,7 +38,7 @@ if __name__ == "__main__":
                      default="get", metavar="")
     arg.add_argument("-e", type=int, help="set delay seconds",
                      default=0, metavar="")
-    arg.add_argument("-a", type=str, help="set User-Agent", metavar="")
+    arg.add_argument("-a", type=str, help="set User-Agent", metavar="",default = "Mozilla/5.0 (Windows NT 6.2; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.1667.0 Safari/537.36")
     arg.add_argument(
         "-A", type=str, help="set User-Agent file,random read", metavar="")
     arg.add_argument(

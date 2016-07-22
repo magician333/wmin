@@ -1,7 +1,6 @@
 import socket
 from thirdparty import requests
 from . import addon
-from .config import timeout, default_ua
 from sys import version_info
 
 if version_info.major == 3:
@@ -10,7 +9,7 @@ else:
     from .printf.py2 import printf
 
 
-def get_info(web, timeout=timeout, proxy=None, ua=None):
+def get_info(web, timeout, proxy=None, ua=None):
 
     printf("Domain:\t" + addon.web_deal(web)[0], "normal")
 
@@ -33,7 +32,7 @@ def get_info(web, timeout=timeout, proxy=None, ua=None):
     printf("")
 
 
-def gets_info(urls, timeout=timeout, proxy=None, ua=None):
+def gets_info(urls, timeout, proxy=None, ua=None):
 
     for url in open(urls).readlines():
         get_info(url.strip("\n"), timeout, proxy, ua)
