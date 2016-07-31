@@ -3,7 +3,7 @@ import os
 import time
 from . import result
 from . import addon
-from sys import version_info
+from sys import version_info,exit
 from thirdparty import requests
 from .config import max_status_code
 
@@ -40,9 +40,8 @@ def scan(web, dictionary, export_filename, to, proxy, ua, ignore_text, method, d
 
     web = addon.web_deal(web)[0]
     web_length = len(web)
-
     for line in open(dictionary).readlines():
-
+        
         if type(uas) == str:
             ua = addon.build_ua(addon.get_random_line(uas), None)
         if type(proxys) == str:
@@ -73,13 +72,10 @@ def scan(web, dictionary, export_filename, to, proxy, ua, ignore_text, method, d
                 pass
         except KeyboardInterrupt:
             break
-            exit()
+            exit()    
         except:
             printf(web + "\t\t\tConnet wrong!!!", "error")
-
         web = web[0:web_length]
-    printf("")          # add a line feed
-
 
 def urls_scan(urls, dictionary_loc, timeout, proxy, ua, ignore_text, method, delay):
     for url in open(urls).readlines():
