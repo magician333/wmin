@@ -2,12 +2,13 @@
 
 import queue
 
+from sys import version_info
 
 if version_info.major == 3:
-    from .printf.py3 import printf
+    # from .printf.py3 import printf
     from urllib.parse import urlparse
 else:
-    from .printf.py2 import printf
+    # from .printf.py2 import printf
     from urlparse import urlparse
 
 
@@ -16,13 +17,13 @@ class Url:
     def __init__(self, url,dictionary,timeout,proxy,delay,ua,ignore_text,method):
         super(Url, self).__init__()
         self.url = url
-        self.dictionary = dic
+        self.dictionary = dictionary
         self.timeout = timeout
-        self.proxy = build_proxy(proxy)
+        self.proxy = self.build_proxy(proxy)
         self.delay = delay
-        self.ua = build_ua(ua)
+        self.ua = {"User-Agent": ua}
         self.ignore_text = ignore_text
-        self.method = filter_method(method)
+        self.method = self.filter_method(method)
 
 
     def deal_dictionary(self):
@@ -48,7 +49,7 @@ class Url:
             self.purl = purl
             self.hostname = hostname
         else:
-            printf("Please enter url with protocl","warning")
+            # printf("Please enter url with protocl","warning")
             exit()
 
     def filter_method(self,method):
@@ -59,20 +60,13 @@ class Url:
 
     def build_proxy(self,proxy):
         if None != proxy:
-                if ":" and "~" in proxy:
-                    # proxy : ip:port@type
-                    proxy = dict({proxy.split("@")[1]: proxy.split(":")[
+            if ":" and "~" in proxy:
+                # proxy : ip:port@type
+                proxy = dict({proxy.split("@")[1]: proxy.split(":")[
                                  0] + ":" + proxy.split("@")[0].split(":")[1]})
-                    return proxy
-                else:
-                    printf("Type wrong!", "warning")
-                    return None
+                return proxy
             else:
+                # printf("Type wrong!", "warning")
                 return None
-
-    def build_ua(self,ua):
-        if None != ua:
-            ua = {"User-Agent": ua}
         else:
-            ua = {"User-Agent": default_ua}
-        return ua
+            return None
