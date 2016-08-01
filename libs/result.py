@@ -16,15 +16,14 @@ def export_result(export_file, web, web_text):  # export result file
     except:
         printf("Cann't export the result!!!", "error")
         # set format to html
-    export_web = "<li><a href=\"{0}\" target=\"_blank\">{1}</a></li>".format(
-        web, web_text)
+    export_web = "<li><a href=\"{0}\" target=\"_blank\">{1}</a></li>".format(web, web_text)
     export_web_len = len(export_web)
     export_f.write(export_web)
     export_f.seek(0, 0)  # goto file's head
     export_f.close()
 
 
-def init_webframe(filename, url):  # init the web form
+def init_webframe(filename):  # init the web form
     if os.path.exists("output"):
         pass
     else:
@@ -66,8 +65,7 @@ def init_webframe(filename, url):  # init the web form
 
     </body>
 </html>"""
-    if filename == None:
-        filename = addon.web_deal(url)[1]
+
     export_filename = "ouput/" + filename + ".html"  # set output filename
     try:
         export_file = open(export_filename, "w")  # use write to open file

@@ -58,8 +58,7 @@ def scan(web, dictionary, export_filename, to, proxy, ua, ignore_text, method, d
             def output(code, web):
                 printweb(code, web)
                 if code < max_status_code:
-                    result.export_result(
-                        export_filename, web, web + "\t" + str(code))
+                    result.export_result(export_filename, web, web + "\t" + str(code))
 
             time.sleep(delay)
             code = custom_request(web, to, proxy, ua, method)
