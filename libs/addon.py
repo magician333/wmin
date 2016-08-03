@@ -3,6 +3,9 @@ import random
 import linecache
 from .config import default_ua
 from sys import version_info
+import glob
+import queue
+import ipdb
 
 if version_info.major == 3:
     from .printf.py3 import printf
@@ -42,16 +45,63 @@ def filter_method(method):
         return method.lower()
 
 
-def check_dic(dic):
-    if dic != None:
+def deal_dict(dic,DIC):
+    if dic and DIC:
+        printf("Parameter make an error,just support a kind of set function", "error")
+        exit()
+    elif None == dic and None != DIC:
+        if os.path.isdir(DIC):
+            dictionary = glob.glob(DIC+"/*.*")
+            return dictionary
+        else:
+            printf("Dictionary folder not exists", "error")
+            exit()
+    elif None != dic and None == DIC:
         try:
             open(dic)
             return dic
-        except FileNotFoundError:
+        except:
             printf("Dictionary not found", "error")
-            return None
-    else:
-        return ""
+            exit()
+
+def deal_url(url,URL):
+
+    url_list = queue.Queue()
+    if url and URL:
+        printf("Parameter make an error,just support a kind of set function", "error")
+        exit()
+    elif None == url and URL != None:
+        if os.path.isfile(URL):
+            with open(URL) as f:
+                for line in f.readlines():
+                    url_list.put(line.strip("\n"))
+        else:
+            printf(filename + " not exists!", "error")
+            exit()
+    elif None != url and None == URL:
+        url_list.put(url)
+    return url_list
+
+def batch_deal(single,mutile):
+    #
+    #
+    #
+    list_ = []
+    if single and mutile:
+        printf("Parameter make an error,just support a kind of set function", "error")
+        exit()
+    elif "" == single and mutile != "":
+        if os.path.isfile(mutile):
+            with open(mutile) as f:
+                for line in f.readlines():
+                    list_.append(line.strip("\n"))
+        else:
+            printf(filename + " not exists!", "error")
+            exit()
+    elif "" != single and "" == mutile:
+        list_.append(single)
+    
+    return list_  
 
 
 def build_result(string, url):
@@ -98,24 +148,13 @@ def build_ua(ua, uas):
             return uas
 
 
-def test_file(filename):
-    if filename != None:
-        if os.path.isfile(filename):
-            return filename
-        else:
-            printf(filename + " not exists!", "error")
-            exit()
-            return None
-    else:
-        return None
 
-
-def test_dicts(dicts):
-    if dicts != None:
-        if os.path.isdir(dicts):
-            return dicts
-        else:
-            printf("Dictionary folder not exists", "error")
-            return None
-    else:
-        return None
+# def test_dicts(dicts):
+#     if dicts != None:
+#         if os.path.isdir(dicts):
+#             return dicts
+#         else:
+#             printf("Dictionary folder not exists", "error")
+#             return None
+#     else:
+#         return None
