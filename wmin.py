@@ -5,7 +5,6 @@ from libs import scan
 from libs import get_info
 from libs import addon
 from sys import version_info
-import ipdb
 from libs import Url
 if version_info.major == 3:
     from libs.printf.py3 import printf, printweb
@@ -15,7 +14,7 @@ else:
     from urlparse import urlparse
 
 
-if __name__ == "__main__":
+def main():
 
     usage = "wmin.py -u url -d dictionary [options]"
     description = '''
@@ -60,9 +59,17 @@ if __name__ == "__main__":
         printf("HTTP method error,must use get/post/head", "error")
     else:
         if url and dictionary == None:
-            get_info.get_info(url, timeout, proxy, ua)
+            for i in range(url.qsize()):
+                target = Url.Url(url.get(), "", timeout, proxy, delay, ua, ignore_text, method)
+                target.get_info()
         elif url and dictionary:
             for i in range(url.qsize()):
                 target = Url.Url(url.get(), dictionary, timeout, proxy, delay, ua, ignore_text, method)
                 target.build_report_file()
                 target.run()
+if __name__ == '__main__':
+    try:
+        main()
+    except:
+        printf("Maybe something wrong.........\n","warning")
+        exit()

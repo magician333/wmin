@@ -4,10 +4,10 @@ import queue
 import time
 import requests
 import threading
-import ipdb
 import random
 from . import result
 from sys import version_info
+import socket
 
 if version_info.major == 3:
     from .printf.py3 import printf,printweb
@@ -28,7 +28,7 @@ class Url:
         self.delay = delay
         self.ignore_text = ignore_text
         self.method = self.filter_method(method)
-        ipdb.set_trace()
+        #ipdb.set_trace()
 
     def deal_dictionary(self,dictionary):
         self.dict_line = queue.Queue()
@@ -109,9 +109,9 @@ class Url:
             if "get" == self.method:
                 code = requests.get(url, timeout=self.timeout, proxies=self.proxy[random.randint(0,len(self.proxy)-1)], headers=self.ua[random.randint(0,len(self.ua)-1)], allow_redirects=False).status_code
             elif "post" == self.method:
-                code = requests.post(url, timeout=self.timeout, proxies=self.proxy[random.randint(0,len(self.proxy)-1)],headers=self.ua[random.randint(0,len(self.ua)-1)], allow_redirects=False).status_code
+                code = requests.post(url, timeout=self.timeout, proxies=self.proxy[random.randint(0,len(self.proxy)-1)], headers=self.ua[random.randint(0,len(self.ua)-1)], allow_redirects=False).status_code
             else:
-                code = requests.head(url, timeout=self.timeout, proxies=self.proxy[random.randint(0,len(self.proxy)-1)],headers=self.ua[random.randint(0,len(self.ua)-1)], allow_redirects=False).status_code
+                code = requests.head(url, timeout=self.timeout, proxies=self.proxy[random.randint(0,len(self.proxy)-1)], headers=self.ua[random.randint(0,len(self.ua)-1)], allow_redirects=False).status_code
 
             if "" != self.ignore_text and self.ignore_text not in requests.get(url).text:
                 printweb(code, url)
@@ -122,6 +122,23 @@ class Url:
             exit()
         except:
             printf(url + "\tConnect error", "error")
+
+    def get_info(self):
+
+        printf("Domain:\t" + self.url, "normal")
+        try:
+            try:
+                printf("Server:\t" + requests.get(self.url, timeout=self.timeout, proxies=self.proxy[random.randint(0,len(self.proxy)-1)], headers=self.ua[random.randint(0,len(self.ua)-1)], allow_redirects=False).headers["Server"], "normal")
+            except:
+                printf("Can\'t get server,Connect wrong", "error")
+            try:
+                printf("IP:\t" +socket.gethostbyname(self.hostname), "normal")
+            except Exception as e:
+                print(e)
+                printf("Can\'t get ip,Connect wrong", "error")
+            printf("")
+        except KeyboardInterrupt:
+            exit()
 
     def run(self):
         for i in range(self.dict_line.qsize()):
