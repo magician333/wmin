@@ -16,7 +16,8 @@ else:
 
 def filter_method(method):
     if method.lower() not in ["get", "post", "head"]:
-        return None
+        printf("HTTP method error,must use get/post/head", "warning")
+        return "get"
     else:
         return method.lower()
 
@@ -77,3 +78,11 @@ def batch_deal(single,mutile):
         list_.append("")
     
     return list_  
+
+def deal_report(filename):
+    for i in list(filename):
+        if i in ["?", "`", "\\", "/", "*", "\"", "\'", "<", ">", "|"]:
+            printf("You can not use forbidden character in filenam, especial on WINDOWS system!!!","error")
+            break
+            exit()
+    return filename

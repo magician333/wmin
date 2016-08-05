@@ -1,8 +1,6 @@
 import argparse
 import os
 from libs import result
-from libs import scan
-from libs import get_info
 from libs import addon
 from sys import version_info
 from libs import Url
@@ -30,7 +28,7 @@ def main():
     arg.add_argument("-U", type=str, help="set urls file", metavar="")
     arg.add_argument("-d", type=str, help="set dictionary", metavar="")
     arg.add_argument("-D", type=str, help="set dictionary folder", metavar="")
-    arg.add_argument("-r", type=str, help="set report filename", metavar="")
+    # arg.add_argument("-r", type=str, help="set report filename", metavar="")
     arg.add_argument("-t", type=float, help="set timeout",metavar="", default=0.04)
     arg.add_argument("-p", type=str, help="set proxy    *format:  ip:port@type",default="", metavar="")
     arg.add_argument("-P", type=str, help="set proxy file,random read", default="", metavar="")
@@ -45,6 +43,7 @@ def main():
 
     url = addon.deal_url(para["u"],para["U"])
     dictionary = addon.deal_dict(para["d"],para["D"])
+    # report = addon.deal_report(para["r"])
     timeout = para["t"]
     proxy = addon.batch_deal(para["p"],para["P"])
     delay = para["e"]
@@ -53,10 +52,8 @@ def main():
     method = addon.filter_method(para["m"])
 
 
-    if url.qsize() > 1 and para["r"]:
+    if url.qsize() > 1 and report:
         printf("If you set URLS,you can not set the output filename", "error")
-    elif method == None:
-        printf("HTTP method error,must use get/post/head", "error")
     else:
         if url and dictionary == None:
             for i in range(url.qsize()):
@@ -67,9 +64,12 @@ def main():
                 target = Url.Url(url.get(), dictionary, timeout, proxy, delay, ua, ignore_text, method)
                 target.build_report_file()
                 target.run()
+
+
 if __name__ == '__main__':
-    try:
-        main()
-    except:
-        printf("Maybe something wrong.........\n","warning")
-        exit()
+    # try:
+    main()
+    # except:
+    #     printf("Maybe something wrong.........\n","warning")
+    #     exit()
+        
