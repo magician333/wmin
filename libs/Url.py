@@ -96,7 +96,7 @@ class Url:
             return None
 
     def build_report_file(self):
-        self.report_filename = result.init_webframe(self.hostname)
+        self.report_filename = result.init_html(self.hostname)
 
     def scan(self):
         url = self.url + self.dict_line.get_nowait()
@@ -116,7 +116,7 @@ class Url:
             if "" != self.ignore_text and self.ignore_text not in requests.get(url).text:
                 printweb(code, url)
                 if code < 400:
-                    result.export_result(self.report_filename, url, url + "\t" + str(code))
+                    result.export_html(self.report_filename, url, url + "\t" + str(code))
             self.dict_line.task_done()
         except KeyboardInterrupt:
             exit()

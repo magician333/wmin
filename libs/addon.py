@@ -79,10 +79,9 @@ def batch_deal(single,mutile):
     
     return list_  
 
-def deal_report(filename):
-    for i in list(filename):
-        if i in ["?", "`", "\\", "/", "*", "\"", "\'", "<", ">", "|"]:
-            printf("You can not use forbidden character in filenam, especial on WINDOWS system!!!","error")
-            break
-            exit()
-    return filename
+def deal_num(num):
+    if num < 0:
+        printf("You must set a postive number,already convert plus", "warning")
+        return abs(num)
+    else:
+        return num

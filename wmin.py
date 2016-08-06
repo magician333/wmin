@@ -36,6 +36,8 @@ def main():
     arg.add_argument("-e", type=int, help="set delay seconds",default=0, metavar="")
     arg.add_argument("-a", type=str, help="set User-Agent", metavar="",default="")
     arg.add_argument("-A", type=str, help="set User-Agent file,random read", default="", metavar="")
+    arg.add_argument("-x", type=int, help="set multithreading number", default=1, metavar="")
+    arg.add_argument("-X", type=int, help="set multiprocessing number", default=1, metavar="")
     arg.add_argument("-i", type=str, help="set ignore text default 404", default='404', metavar="")
 
     args = arg.parse_args()
@@ -44,9 +46,9 @@ def main():
     url = addon.deal_url(para["u"],para["U"])
     dictionary = addon.deal_dict(para["d"],para["D"])
     # report = addon.deal_report(para["r"])
-    timeout = para["t"]
+    timeout = addon.deal_num(para["t"])
     proxy = addon.batch_deal(para["p"],para["P"])
-    delay = para["e"]
+    delay = addon.deal_num(para["e"])
     ua = addon.batch_deal(para["a"],para["A"])
     ignore_text = para["i"]
     method = addon.filter_method(para["m"])

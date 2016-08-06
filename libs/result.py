@@ -9,7 +9,7 @@ else:
     from .printf.py2 import printf
 
 
-def export_result(export_file, web, web_text):  # export result file
+def export_html(export_file, web, web_text):  # export result file
     try:  # open file
         export_f = open(export_file, "a+")  # use add to open file
         export_f.seek(274, 0)  # turn after to</center>
@@ -23,7 +23,7 @@ def export_result(export_file, web, web_text):  # export result file
     export_f.close()
 
 
-def init_webframe(filename):  # init the web form
+def init_html(filename):  # init the web form
     if os.path.exists("output"):
         pass
     else:
