@@ -14,10 +14,11 @@ if version_info.major == 3:
 else:
     from .printf.py2 import printf, printweb
     from urlparse import urlparse
-
+    input = raw_input
 
 class Url:
-    """docstring for Url"""
+    """Url is the most important part of wmin,
+    this class include the scan and get website information"""
     def __init__(self, url, dictionary, timeout,
                  proxy, delay, ua, ignore_text, method):
         self.url_deal(url)
@@ -28,6 +29,7 @@ class Url:
         self.delay = delay
         self.ignore_text = ignore_text
         self.method = self.filter_method(method)
+        self.fail_url = queue.Queue()
 
     def deal_dictionary(self, dictionary):
         self.dict_line = queue.Queue()
@@ -102,15 +104,30 @@ class Url:
 
         time.sleep(self.delay)
         # delay time
-            
+
         try:
             # use appoint method
             if "get" == self.method:
-                code = requests.get(url, timeout=self.timeout, proxies=self.proxy[random.randint(0, len(self.proxy)-1)], headers=self.ua[random.randint(0,len(self.ua)-1)], allow_redirects=False).status_code
+                code = requests.get(url, timeout=self.timeout,
+                                    proxies=self.proxy[
+                                        random.randint(0, len(self.proxy)-1)],
+                                    headers=self.ua[random.randint
+                                                    (0, len(self.ua)-1)],
+                                    allow_redirects=False).status_code
             elif "post" == self.method:
-                code = requests.post(url, timeout=self.timeout, proxies=self.proxy[random.randint(0, len(self.proxy)-1)], headers=self.ua[random.randint(0, len(self.ua)-1)], allow_redirects=False).status_code
+                code = requests.post(url, timeout=self.timeout,
+                                     proxies=self.proxy[
+                                         random.randint(0, len(self.proxy)-1)],
+                                     headers=self.ua[random.randint
+                                                     (0, len(self.ua)-1)],
+                                     allow_redirects=False).status_code
             else:
-                code = requests.head(url, timeout=self.timeout, proxies=self.proxy[random.randint(0, len(self.proxy)-1)], headers=self.ua[random.randint(0, len(self.ua)-1)], allow_redirects=False).status_code
+                code = requests.head(url, timeout=self.timeout,
+                                     proxies=self.proxy[
+                                         random.randint(0, len(self.proxy)-1)],
+                                     headers=self.ua[random.randint
+                                                     (0, len(self.ua)-1)],
+                                     allow_redirects=False).status_code
 
             if "" != self.ignore_text and \
                self.ignore_text not in requests.get(url).text:
@@ -122,6 +139,7 @@ class Url:
         except KeyboardInterrupt:
             exit()
         except:
+            self.fail_url.put(url.replace(self.url, ""))
             printf(url + "\tConnect error", "error")
 
     def get_info(self):
@@ -129,14 +147,18 @@ class Url:
         printf("Domain:\t" + self.url, "normal")
         try:
             try:
-                printf("Server:\t" + requests.get(self.url, timeout=self.timeout, proxies=self.proxy[random.randint(0,len(self.proxy)-1)], headers=self.ua[random.randint(0,len(self.ua)-1)], allow_redirects=False).headers["Server"], "normal")
+                printf("Server:\t" + requests.get
+                       (self.url, timeout=self.timeout,
+                        proxies=self.proxy[
+                            random.randint(0, len(self.proxy)-1)],
+                        headers=self.ua[random.randint(0, len(self.ua)-1)],
+                        allow_redirects=False).headers["Server"], "normal")
             except:
                 printf("Can\'t get server,Connect wrong", "error")
             try:
                 printf("IP:\t" +
                        socket.gethostbyname(self.hostname), "normal")
-            except Exception as e:
-                print(e)
+            except:
                 printf("Can\'t get ip,Connect wrong", "error")
             printf("")
         except KeyboardInterrupt:
@@ -145,3 +167,13 @@ class Url:
     def run(self):
         for i in range(self.dict_line.qsize()):
             self.scan()
+
+    def reconnect(self):
+        while 0 != self.fail_url.qsize():
+            if input("Reconnect failed url?[Y/n]") in [
+                    "n", "no", "No", "NO"]:
+                break
+            else:
+                self.dict_line = self.fail_url
+                self.fail_url = queue.Queue()
+                self.run()
