@@ -1,17 +1,13 @@
 import os
-import random
-from .config import default_ua
 from sys import version_info
 import glob
 import queue
-
 if version_info.major == 3:
     from .printf.py3 import printf
     from urllib.parse import urlparse
 else:
     from .printf.py2 import printf
     from urlparse import urlparse
-
 
 
 def filter_method(method):
@@ -22,18 +18,18 @@ def filter_method(method):
         return method.lower()
 
 
-def deal_dict(dic,DIC):
+def deal_dict(dic, DIC):
     if dic and DIC:
-        printf("Parameter make an error,just support a kind of set function", "error")
+        printf("Parameter error,just support a kind of set function", "error")
         exit()
-    elif None == dic and None != DIC:
+    elif dic is None and DIC is not None:
         if os.path.isdir(DIC):
             dictionary = glob.glob(DIC+"/*.*")
             return dictionary
         else:
             printf("Dictionary folder not exists", "error")
             exit()
-    elif None != dic and None == DIC:
+    elif dic is not None and DIC is None:
         try:
             open(dic)
             return dic
@@ -41,43 +37,54 @@ def deal_dict(dic,DIC):
             printf("Dictionary not found", "error")
             exit()
 
-def deal_url(url,URL):
+
+def deal_url(url, URL):
 
     url_list = queue.Queue()
     if url and URL:
-        printf("Parameter make an error,just support a kind of set function", "error")
+        printf("Parameter error,just support a kind of set function", "error")
         exit()
-    elif None == url and URL != None:
+    elif url is None and URL is not None:
         if os.path.isfile(URL):
-            with open(URL) as f:
-                for line in f.readlines():
-                    url_list.put(line.strip("\n"))
+            try:
+                with open(URL) as f:
+                    for line in f.readlines():
+                        url_list.put(line.strip("\n"))
+            except UnicodeDecodeError:
+                printf("Coding error,please convert file to utf-8", "error")
+                exit()
         else:
-            printf(filename + " not exists!", "error")
+            printf(URL + " not exists!", "error")
             exit()
-    elif None != url and None == URL:
+    elif url is not None and URL is None:
         url_list.put(url)
     return url_list
 
-def batch_deal(single,mutile):
+
+def batch_deal(single, mutile):
     list_ = []
     if single and mutile:
-        printf("Parameter make an error,just support a kind of set function", "error")
+        printf("Parameter error,just support a kind of set function", "error")
         exit()
     elif "" == single and mutile != "":
         if os.path.isfile(mutile):
-            with open(mutile) as f:
-                for line in f.readlines():
-                    list_.append(line.strip("\n"))
+            try:
+                with open(mutile) as f:
+                    for line in f.readlines():
+                        list_.append(line.strip("\n"))
+            except UnicodeDecodeError:
+                printf("Coding error,please convert file to utf-8", "error")
+                exit()
         else:
-            printf(filename + " not exists!", "error")
+            printf(mutile + " not exists!", "error")
             exit()
     elif "" != single and "" == mutile:
         list_.append(single)
     else:
         list_.append("")
-    
-    return list_  
+
+    return list_
+
 
 def deal_num(num):
     if num < 0:

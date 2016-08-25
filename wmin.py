@@ -1,28 +1,35 @@
 import argparse
-from libs import addon
+from libs import addon, Url
 from sys import version_info
-from libs import Url
-import queue
+from thirdparty import colorama
 if version_info.major == 3:
-    from libs.printf.py3 import printf, printweb
+    from libs.printf.py3 import printf
     from urllib.parse import urlparse
 else:
-    from libs.printf.py2 import printf, printweb
+    from libs.printf.py2 import printf
     from urlparse import urlparse
 
 
 def main():
-
-    usage = "wmin.py -u url -d dictionary [options]"
+    colorama.init()
+    banner = """
+                            ██              
+                            ▀▀               | dev <0.01> |
+    ██      ██  ████▄██    ████     ██▄████ 
+    ▀█  ██  █▀  ██ ██ ██     ██     ██▀   ██ 
+     ██▄██▄██   ██ ██ ██     ██     ██    ██ 
+     ▀██  ██▀   ██ ██ ██  ▄▄▄██▄▄▄  ██    ██ 
+      ▀▀  ▀▀    ▀▀ ▀▀ ▀▀  ▀▀▀▀▀▀▀▀  ▀▀    ▀▀ """
+    usage = "wmin.py -u url [options]"
     description = '''
     Wmin is a web content discovery tool.
     It make requests and analyze the responses trying to figure out whether the
     resource is or not accessible.
     '''
     epilog = "License, requests, etc: https://github.com/magician333/wmin"
-    arg = argparse.ArgumentParser(
-        usage=usage, description=description, epilog=epilog)
-
+    arg = argparse.ArgumentParser(usage=usage,
+                                  description=description, epilog=epilog)
+    printf(colorama.Fore.LIGHTBLUE_EX+banner+colorama.Fore.RESET)
     arg.add_argument("-u", type=str, help="set target url", metavar="")
     arg.add_argument("-U", type=str, help="set urls file", metavar="")
     arg.add_argument("-d", type=str, help="set dictionary", metavar="")
@@ -81,5 +88,8 @@ if __name__ == '__main__':
     try:
         main()
     except Exception as e:
+        # if you want to show the details of error
+        if False:
+            printf(e)
         printf("Maybe something wrong.........\n", "warning")
         exit()

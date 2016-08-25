@@ -2,8 +2,9 @@ from thirdparty.colorama import Fore,init
 
 init(autoreset=True)
 
-def printf(string,status = "blank"):
-    
+
+def printf(string, status="blank"):
+
     """
     printf function\n
     status default is ordinary
@@ -29,7 +30,7 @@ def printf(string,status = "blank"):
         print Fore.BLUE+"No "+status+Fore.RESET
 
 
-def printweb(code,web):
+def printweb(code, web):
     code_init = str(code)[0]
 
     if "1" == code_init:

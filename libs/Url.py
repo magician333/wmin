@@ -16,6 +16,7 @@ else:
     from urlparse import urlparse
     input = raw_input
 
+
 class Url:
     """Url is the most important part of wmin,
     this class include the scan and get website information"""
@@ -44,6 +45,9 @@ class Url:
                                 self.dict_line.put(line.strip("\n"))
                             else:
                                 self.dict_line.put("/" + line.strip("\n"))
+            except UnicodeDecodeError:
+                printf("Coding error,please convert file to utf-8", "error")
+                exit()
             except FileNotFoundError:
                 self.dict_line = None
 
