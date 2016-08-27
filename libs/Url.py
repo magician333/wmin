@@ -1,6 +1,5 @@
-# coding : utf-8
+# coding=utf-8
 
-import queue
 import time
 import requests
 import random
@@ -11,10 +10,12 @@ import socket
 if version_info.major == 3:
     from .printf.py3 import printf, printweb
     from urllib.parse import urlparse
+    import queue
 else:
     from .printf.py2 import printf, printweb
     from urlparse import urlparse
     input = raw_input
+    import Queue as queue
 
 
 class Url:
@@ -132,17 +133,16 @@ class Url:
                                      headers=self.ua[random.randint
                                                      (0, len(self.ua)-1)],
                                      allow_redirects=False).status_code
-
             if "" != self.ignore_text and \
                self.ignore_text not in requests.get(url).text:
                 printweb(code, url)
                 if code < 400:
                     result.export_html(self.report_filename,
                                        url, url + "\t" + str(code))
-            self.dict_line.task_done()
         except KeyboardInterrupt:
             exit()
-        except:
+        except Exception as e:
+            # print(e)
             self.fail_url.put(url.replace(self.url, ""))
             printf(url + "\tConnect error", "error")
 
@@ -174,10 +174,13 @@ class Url:
 
     def reconnect(self):
         while 0 != self.fail_url.qsize():
-            if input("Reconnect failed url?[Y/n]") in [
-                    "n", "no", "No", "NO"]:
-                break
-            else:
-                self.dict_line = self.fail_url
-                self.fail_url = queue.Queue()
-                self.run()
+            try:
+                if input("Reconnect failed url?[Y/n]") in [
+                        "n", "no", "No", "NO"]:
+                    break
+                else:
+                    self.dict_line = self.fail_url
+                    self.fail_url = queue.Queue()
+                    self.run()
+            except:
+                exit()

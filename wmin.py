@@ -1,3 +1,4 @@
+# coding=utf-8
 import argparse
 from libs import addon, Url
 from sys import version_info
@@ -36,7 +37,7 @@ def main():
     arg.add_argument("-D", type=str, help="set dictionary folder", metavar="")
     # arg.add_argument("-r", type=str, help="set report filename", metavar="")
     arg.add_argument("-t", type=float, help="set timeout",
-                     metavar="", default=0.04)
+                     metavar="", default=0.4)
     arg.add_argument("-p", type=str,
                      help="set proxy    *format:  ip:port@type",
                      default="", metavar="")
