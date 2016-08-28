@@ -1,9 +1,10 @@
-from thirdparty.colorama import Fore,init
+from thirdparty.colorama import Fore, init
 
 init(autoreset=True)
 
-def printf(string,status = "blank"):
-    
+
+def printf(string, status="blank"):
+
     """
     printf function\n
     status default is ordinary
@@ -12,7 +13,7 @@ def printf(string,status = "blank"):
     warning == Yellow
     error == Red
     """
-    
+
     if "blank" == status:
         print(string)
 
@@ -30,7 +31,8 @@ def printf(string,status = "blank"):
     else:
         print(Fore.BLUE+"No "+status+Fore.RESET)
 
-def printweb(code,web):
+
+def printweb(code, web):
     code_init = str(code)[0]
 
     if "1" == code_init:
@@ -40,6 +42,6 @@ def printweb(code,web):
     if "3" == code_init:
         print(Fore.LIGHTCYAN_EX+"<"+str(code)+">\t"+web+Fore.RESET)
     if "4" == code_init:
-        print(Fore.RED+"<"+str(code)+">\t"+web+Fore.RESET)
+        print(Fore.LIGHTRED_EX+"<"+str(code)+">\t"+web+Fore.RESET)
     if "5" == code_init:
-        print(Fore.MAGENTA+"<"+str(code)+">\t"+web+Fore.RESET)
+        print(Fore.LIGHTMAGENTA_EX+"<"+str(code)+">\t"+web+Fore.RESET)

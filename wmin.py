@@ -57,7 +57,7 @@ def main():
     arg.add_argument("-X", type=int,
                      help="set multiprocessing number", default=1, metavar="")
     arg.add_argument("-i", type=str,
-                     help="set ignore text", default='404', metavar="")
+                     help="set ignore text", default="", metavar="")
 
     args = arg.parse_args()
     para = vars(args)

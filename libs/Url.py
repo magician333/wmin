@@ -107,9 +107,6 @@ class Url:
     def scan(self):
         url = self.url + self.dict_line.get_nowait()
 
-        time.sleep(self.delay)
-        # delay time
-
         try:
             # use appoint method
             if "get" == self.method:
@@ -133,18 +130,34 @@ class Url:
                                      headers=self.ua[random.randint
                                                      (0, len(self.ua)-1)],
                                      allow_redirects=False).status_code
-            if "" != self.ignore_text and \
-               self.ignore_text not in requests.get(url).text:
+
+            def get_html():
+                return requests.get(url, timeout=self.timeout,
+                                    proxies=self.proxy[
+                                        random.randint(0, len(self.proxy)-1)],
+                                    headers=self.ua[random.randint
+                                                    (0, len(self.ua)-1)],
+                                    allow_redirects=False).text
+
+            def deal_result():
                 printweb(code, url)
-                if code < 400:
+                if 200 == code:
                     result.export_html(self.report_filename,
                                        url, url + "\t" + str(code))
+
+            if "" != self.ignore_text:
+                if self.ignore_text not in get_html():
+                    deal_result()
+            else:
+                deal_result()
+
         except KeyboardInterrupt:
             exit()
         except Exception as e:
-            # print(e)
             self.fail_url.put(url.replace(self.url, ""))
             printf(url + "\tConnect error", "error")
+        time.sleep(self.delay)
+        # delay time
 
     def get_info(self):
 

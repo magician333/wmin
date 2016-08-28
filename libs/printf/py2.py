@@ -1,4 +1,4 @@
-from thirdparty.colorama import Fore,init
+from thirdparty.colorama import Fore, init
 
 init(autoreset=True)
 
@@ -40,6 +40,6 @@ def printweb(code, web):
     if "3" == code_init:
         print Fore.LIGHTCYAN_EX+"<"+str(code)+">\t"+web+Fore.RESET
     if "4" == code_init:
-        print Fore.RED+"<"+str(code)+">\t"+web+Fore.RESET
+        print Fore.LIGHTRED_EX+"<"+str(code)+">\t"+web+Fore.RESET
     if "5" == code_init:
-        print Fore.MAGENTA+"<"+str(code)+">\t"+web+Fore.RESET
+        print Fore.LIGHTMAGENTA_EX+"<"+str(code)+">\t"+web+Fore.RESET
