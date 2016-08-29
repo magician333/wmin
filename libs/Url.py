@@ -110,19 +110,23 @@ class Url:
         try:
             # use appoint method
             if "get" == self.method:
-                code = requests.get(url, timeout=self.timeout,
-                                    proxies=self.proxy[
-                                        random.randint(0, len(self.proxy)-1)],
-                                    headers=self.ua[random.randint
-                                                    (0, len(self.ua)-1)],
-                                    allow_redirects=False).status_code
+                response = requests.get(url, timeout=self.timeout,
+                                        proxies=self.proxy[random.randint(
+                                            0, len(self.proxy)-1)],
+                                        headers=self.ua[random.randint(
+                                            0, len(self.ua)-1)],
+                                        allow_redirects=False)
+                code = response.status_code
+                html = response.text
             elif "post" == self.method:
-                code = requests.post(url, timeout=self.timeout,
-                                     proxies=self.proxy[
-                                         random.randint(0, len(self.proxy)-1)],
-                                     headers=self.ua[random.randint
-                                                     (0, len(self.ua)-1)],
-                                     allow_redirects=False).status_code
+                response = requests.post(url, timeout=self.timeout,
+                                         proxies=self.proxy[random.randint(
+                                            0, len(self.proxy)-1)],
+                                         headers=self.ua[random.randint(
+                                            0, len(self.ua)-1)],
+                                         allow_redirects=False)
+                code = response.status_code
+                html = response.text
             else:
                 code = requests.head(url, timeout=self.timeout,
                                      proxies=self.proxy[
@@ -131,25 +135,25 @@ class Url:
                                                      (0, len(self.ua)-1)],
                                      allow_redirects=False).status_code
 
-            def get_html():
-                return requests.get(url, timeout=self.timeout,
-                                    proxies=self.proxy[
-                                        random.randint(0, len(self.proxy)-1)],
-                                    headers=self.ua[random.randint
-                                                    (0, len(self.ua)-1)],
-                                    allow_redirects=False).text
-
             def deal_result():
                 printweb(code, url)
                 if 200 == code:
                     result.export_html(self.report_filename,
                                        url, url + "\t" + str(code))
 
-            if "" != self.ignore_text:
-                if self.ignore_text not in get_html():
-                    deal_result()
-            else:
+            if "head" == self.method and "" != self.ignore_text:
+                printf("Can't use head method and ignore text at same time",
+                       "error")
+                exit()
+            elif "head" == self.method and "" == self.ignore_text:
                 deal_result()
+            elif self.method == "get" or "post":
+                if "" != self.ignore_text:
+                    if self.ignore_text not in html:
+                        deal_result()
+                else:
+                    deal_result()
+
 
         except KeyboardInterrupt:
             exit()
