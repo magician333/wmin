@@ -2,7 +2,7 @@
 
 import time
 import requests
-import random
+from random import randint
 from . import result
 from sys import version_info
 import socket
@@ -109,51 +109,33 @@ class Url:
 
         try:
             # use appoint method
+            kwargs = {"url": url,
+                      "timeout": self.timeout,
+                      "proxies": self.proxy[randint(0, len(self.proxy)-1)],
+                      "headers": self.ua[randint(0, len(self.ua)-1)],
+                      "allow_redirects": False}
+
             if "get" == self.method:
-                response = requests.get(url, timeout=self.timeout,
-                                        proxies=self.proxy[random.randint(
-                                            0, len(self.proxy)-1)],
-                                        headers=self.ua[random.randint(
-                                            0, len(self.ua)-1)],
-                                        allow_redirects=False)
-                code = response.status_code
-                html = response.text
+                response = requests.get(**kwargs)
             elif "post" == self.method:
-                response = requests.post(url, timeout=self.timeout,
-                                         proxies=self.proxy[random.randint(
-                                            0, len(self.proxy)-1)],
-                                         headers=self.ua[random.randint(
-                                            0, len(self.ua)-1)],
-                                         allow_redirects=False)
-                code = response.status_code
-                html = response.text
+                response = requests.post(**kwargs)
             else:
-                code = requests.head(url, timeout=self.timeout,
-                                     proxies=self.proxy[
-                                         random.randint(0, len(self.proxy)-1)],
-                                     headers=self.ua[random.randint
-                                                     (0, len(self.ua)-1)],
-                                     allow_redirects=False).status_code
+                response = requests.head(**kwargs)
+
+            code = response.status_code
+            html = response.text
 
             def deal_result():
-                printweb(code, url)
-                if 200 == code:
+                if code != 404:
+                    printweb(code, url)
                     result.export_html(self.report_filename,
                                        url, url + "\t" + str(code))
 
-            if "head" == self.method and "" != self.ignore_text:
-                printf("Can't use head method and ignore text at same time",
-                       "error")
-                exit()
-            elif "head" == self.method and "" == self.ignore_text:
-                deal_result()
-            elif self.method == "get" or "post":
-                if "" != self.ignore_text:
-                    if self.ignore_text not in html:
-                        deal_result()
-                else:
+            if "" != self.ignore_text:
+                if self.ignore_text not in html:
                     deal_result()
-
+            else:
+                deal_result()
 
         except KeyboardInterrupt:
             exit()
@@ -171,8 +153,8 @@ class Url:
                 printf("Server:\t" + requests.get
                        (self.url, timeout=self.timeout,
                         proxies=self.proxy[
-                            random.randint(0, len(self.proxy)-1)],
-                        headers=self.ua[random.randint(0, len(self.ua)-1)],
+                            randint(0, len(self.proxy)-1)],
+                        headers=self.ua[randint(0, len(self.ua)-1)],
                         allow_redirects=False).headers["Server"], "normal")
             except:
                 printf("Can\'t get server,Connect wrong", "error")
@@ -186,8 +168,14 @@ class Url:
             exit()
 
     def run(self):
+        stime = time.time()
+        printf("Total number of dictionary:"+str(self.dict_line.qsize())+"\n",
+               "normal")
         for i in range(self.dict_line.qsize()):
             self.scan()
+        printf("")
+        printf("All works done! It takes "+str(time.time()-stime)[:5]+"s",
+               "normal")
 
     def reconnect(self):
         while 0 != self.fail_url.qsize():

@@ -72,6 +72,11 @@ def main():
     ignore_text = para["i"]
     method = addon.filter_method(para["m"])
 
+    if "" != ignore_text and "head" == method:
+        printf("Can't use head method and ignore text at same time",
+               "error")
+        exit()
+
     if url and dictionary is None:
         for i in range(url.qsize()):
             target = Url.Url(url.get(), "", timeout,
