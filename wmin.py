@@ -11,7 +11,7 @@ def main():
     colorama.init()
     banner = """
                             ██              
-                            ▀▀               | dev <0.01> |
+                            ▀▀               | dev <0.02> |
     ██      ██  ████▄██    ████     ██▄████ 
     ▀█  ██  █▀  ██ ██ ██     ██     ██▀   ██ 
      ██▄██▄██   ██ ██ ██     ██     ██    ██ 
@@ -27,31 +27,29 @@ def main():
     arg = argparse.ArgumentParser(usage=usage,
                                   description=description, epilog=epilog)
     printf(colorama.Fore.LIGHTBLUE_EX+banner+colorama.Fore.RESET)
-    arg.add_argument("-u", type=str, help="set target url", metavar="")
+    arg.add_argument(
+        "-u", type=str, help="set target url, must with protocl", metavar="")
     arg.add_argument("-U", type=str, help="set urls file", metavar="")
-    arg.add_argument("-d", type=str, help="set dictionary", metavar="")
+    arg.add_argument(
+        "-d", type=str, help="set dictionary, best to use txt format", metavar="")
     arg.add_argument("-D", type=str, help="set dictionary folder", metavar="")
     # arg.add_argument("-r", type=str, help="set report filename", metavar="")
     arg.add_argument("-t", type=float, help="set timeout",
                      metavar="", default=0.4)
     arg.add_argument("-p", type=str,
-                     help="set proxy    *format:  ip:port@type",
+                     help="set proxy    *format:  ip:port@type, like 0.0.0.0@http",
                      default="", metavar="")
     arg.add_argument("-P", type=str,
                      help="set proxy file,random read", default="", metavar="")
     arg.add_argument("-m", type=str,
-                     help="set method", default="get", metavar="")
+                     help="set method, GET POST HEAD or others, default GET", default="get", metavar="")
     arg.add_argument("-e", type=int,
-                     help="set delay seconds", default=0, metavar="")
+                     help="set delay seconds, default 0", default=0, metavar="")
     arg.add_argument("-a", type=str,
                      help="set User-Agent", metavar="", default="")
     arg.add_argument("-A", type=str,
                      help="set User-Agent file,random read",
                      default="", metavar="")
-    arg.add_argument("-x", type=int,
-                     help="set multithreading number", default=1, metavar="")
-    arg.add_argument("-X", type=int,
-                     help="set multiprocessing number", default=1, metavar="")
     arg.add_argument("-i", type=str,
                      help="set ignore text", default="", metavar="")
 
@@ -60,7 +58,6 @@ def main():
 
     url = addon.deal_url(para["u"], para["U"])
     dictionary = addon.deal_dict(para["d"], para["D"])
-    # report = addon.deal_report(para["r"])
     timeout = addon.deal_num(para["t"])
     proxy = addon.batch_deal(para["p"], para["P"])
     delay = addon.deal_num(para["e"])
