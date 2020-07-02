@@ -4,23 +4,16 @@ import time
 import requests
 from random import randint
 from . import result
-from sys import version_info
 import socket
-
-if version_info.major == 3:
-    from .printf.py3 import printf, printweb
-    from urllib.parse import urlparse
-    import queue
-else:
-    from .printf.py2 import printf, printweb
-    from urlparse import urlparse
-    input = raw_input
-    import Queue as queue
+from .printf.py3 import printf, printweb
+from urllib.parse import urlparse
+import queue
 
 
 class Url:
     """Url is the most important part of wmin,
     this class include the scan and get website information"""
+
     def __init__(self, url, dictionary, timeout,
                  proxy, delay, ua, ignore_text, method):
         self.url_deal(url)

@@ -1,14 +1,8 @@
 import os
-from sys import version_info
 import glob
-if version_info.major == 3:
-    from .printf.py3 import printf
-    from urllib.parse import urlparse
-    import queue
-else:
-    from .printf.py2 import printf
-    from urlparse import urlparse
-    import Queue as queue
+from .printf.py3 import printf
+from urllib.parse import urlparse
+import queue
 
 
 def filter_method(method):

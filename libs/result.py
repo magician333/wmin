@@ -1,12 +1,6 @@
-from sys import version_info
 import os
 from . import addon
-
-
-if version_info.major == 3:
-    from .printf.py3 import printf
-else:
-    from .printf.py2 import printf
+from .printf.py3 import printf
 
 
 def export_html(export_file, web, web_text):  # export result file
@@ -16,7 +10,8 @@ def export_html(export_file, web, web_text):  # export result file
     except:
         printf("Cann't export the result!!!", "error")
         # set format to html
-    export_web = "<li><a href=\"{0}\" target=\"_blank\">{1}</a></li>".format(web, web_text)
+    export_web = "<li><a href=\"{0}\" target=\"_blank\">{1}</a></li>".format(
+        web, web_text)
     export_web_len = len(export_web)
     export_f.write(export_web)
     export_f.seek(0, 0)  # goto file's head

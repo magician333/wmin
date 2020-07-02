@@ -3,12 +3,8 @@ import argparse
 from libs import addon, Url
 from sys import version_info
 from thirdparty import colorama
-if version_info.major == 3:
-    from libs.printf.py3 import printf
-    from urllib.parse import urlparse
-else:
-    from libs.printf.py2 import printf
-    from urlparse import urlparse
+from libs.printf.py3 import printf
+from urllib.parse import urlparse
 
 
 def main():
@@ -89,6 +85,7 @@ def main():
             target.build_report_file()
             target.run()
             target.reconnect()
+
 
 if __name__ == '__main__':
     try:
