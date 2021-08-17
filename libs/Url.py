@@ -5,7 +5,7 @@ import requests
 from random import randint
 from . import result
 import socket
-from .printf.py3 import printf, printweb
+from .display import printf, printweb
 from urllib.parse import urlparse
 import queue
 
@@ -16,17 +16,39 @@ class Url:
 
     def __init__(self, url, dictionary, timeout,
                  proxy, delay, ua, ignore_text, method):
-        self.url_deal(url)
-        self.dictionary = self.deal_dictionary(dictionary)
+        self.format_url(url)
+        self.dictionary = self.format_dict(dictionary)
         self.timeout = timeout
-        self.proxy = list(map(self.build_proxy, proxy))
-        self.ua = list(map(self.build_ua, ua))
+        self.proxy = list(map(self.set_proxy, proxy))
+        self.ua = list(map(self.set_ua, ua))
         self.delay = delay
         self.ignore_text = ignore_text
         self.method = self.filter_method(method)
         self.fail_url = queue.Queue()
 
-    def deal_dictionary(self, dictionary):
+    def set_ua(self, ua):
+        if "" == ua:
+            return None
+        else:
+            return dict({"User-Agent": ua})
+
+    def set_proxy(self, proxy):
+        if "" != proxy:
+            if ":" and "@" in proxy:
+                # proxy type : ip:port@type
+                proxy = dict({proxy.split("@")[1]: proxy.split(":")[0]
+                              + ":" + proxy.split("@")[0].split(":")[1]})
+                return proxy
+            else:
+                printf("Type wrong!", "warning")
+                return None
+        else:
+            return None
+
+    def set_reportfile(self):
+        self.report_filename = result.init_html(self.hostname)
+
+    def format_dict(self, dictionary):
         self.dict_line = queue.Queue()
 
         def add_dictline(filename):
@@ -53,7 +75,7 @@ class Url:
             # single dictionary file
             add_dictline(dictionary)
 
-    def url_deal(self, url):
+    def format_url(self, url):
         protocol = urlparse(url).scheme
         if protocol:
             purl = url
@@ -74,28 +96,6 @@ class Url:
             return None
         else:
             return method.lower()
-
-    def build_ua(self, ua):
-        if "" == ua:
-            return None
-        else:
-            return dict({"User-Agent": ua})
-
-    def build_proxy(self, proxy):
-        if "" != proxy:
-            if ":" and "@" in proxy:
-                # proxy type : ip:port@type
-                proxy = dict({proxy.split("@")[1]: proxy.split(":")[0]
-                              + ":" + proxy.split("@")[0].split(":")[1]})
-                return proxy
-            else:
-                printf("Type wrong!", "warning")
-                return None
-        else:
-            return None
-
-    def build_report_file(self):
-        self.report_filename = result.init_html(self.hostname)
 
     def scan(self):
         url = self.url + self.dict_line.get_nowait()
@@ -118,17 +118,10 @@ class Url:
             code = response.status_code
             html = response.text
 
-            def deal_result():
-                if code != 404:
-                    printweb(code, url)
-                    result.export_html(self.report_filename,
-                                       url, url + "\t" + str(code))
-
-            if "" != self.ignore_text:
-                if self.ignore_text not in html:
-                    deal_result()
-            else:
-                deal_result()
+            if self.ignore_text == "" or self.ignore_text not in html:
+                printweb(code, url)
+                result.export_html(self.report_filename,
+                                   url, url+"&nbsp;&nbsp;&nbsp;<strong>[" + str(code)+"]</strong>")
 
         except KeyboardInterrupt:
             exit()
@@ -137,6 +130,19 @@ class Url:
             printf(url + "\tConnect error", "error")
         time.sleep(self.delay)
         # delay time
+
+    def reconnect(self):
+        while 0 != self.fail_url.qsize():
+            try:
+                if input("Reconnect failed url?[Y/n]") in [
+                        "n", "no", "No", "NO"]:
+                    break
+                else:
+                    self.dict_line = self.fail_url
+                    self.fail_url = queue.Queue()
+                    self.run()
+            except:
+                exit()
 
     def get_info(self):
 
@@ -149,6 +155,7 @@ class Url:
                             randint(0, len(self.proxy)-1)],
                         headers=self.ua[randint(0, len(self.ua)-1)],
                         allow_redirects=False).headers["Server"], "normal")
+
             except:
                 printf("Can\'t get server,Connect wrong", "error")
             try:
@@ -169,16 +176,3 @@ class Url:
         printf("")
         printf("All works done! It takes "+str(time.time()-stime)[:5]+"s",
                "normal")
-
-    def reconnect(self):
-        while 0 != self.fail_url.qsize():
-            try:
-                if input("Reconnect failed url?[Y/n]") in [
-                        "n", "no", "No", "NO"]:
-                    break
-                else:
-                    self.dict_line = self.fail_url
-                    self.fail_url = queue.Queue()
-                    self.run()
-            except:
-                exit()

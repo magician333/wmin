@@ -1,7 +1,6 @@
 import os
 import glob
-from .printf.py3 import printf
-from urllib.parse import urlparse
+from .display import printf
 import queue
 
 
@@ -13,7 +12,7 @@ def filter_method(method):
         return method.lower()
 
 
-def deal_dict(dic, DIC):
+def format_dicts(dic, DIC):
     if dic and DIC:
         printf("Parameter error,just support a kind of set function", "error")
         exit()
@@ -33,7 +32,7 @@ def deal_dict(dic, DIC):
             exit()
 
 
-def deal_url(url, URL):
+def format_urls(url, URL):
 
     url_list = queue.Queue()
     if url and URL:
@@ -56,7 +55,7 @@ def deal_url(url, URL):
     return url_list
 
 
-def batch_deal(single, mutile):
+def format_batchs(single, mutile):
     list_ = []
     if single and mutile:
         printf("Parameter error,just support a kind of set function", "error")
@@ -81,7 +80,7 @@ def batch_deal(single, mutile):
     return list_
 
 
-def deal_num(num):
+def format_nums(num):
     if num < 0:
         printf("You must set a postive number,already convert plus", "warning")
         return abs(num)

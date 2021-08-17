@@ -1,18 +1,16 @@
 import os
-from . import addon
-from .printf.py3 import printf
+from .display import printf
 
 
-def export_html(export_file, web, web_text):  # export result file
+def export_html(export_file, url, url_text):  # export result file
     try:  # open file
         export_f = open(export_file, "a+")  # use add to open file
         export_f.seek(274, 0)  # turn after to</center>
     except:
         printf("Cann't export the result!!!", "error")
         # set format to html
-    export_web = "<li><a href=\"{0}\" target=\"_blank\">{1}</a></li>".format(
-        web, web_text)
-    export_web_len = len(export_web)
+    export_web = "<li><a href=\"{0}\" target=\"_blank\">{1}</a></li><br/>".format(
+        url, url_text)
     export_f.write(export_web)
     export_f.seek(0, 0)  # goto file's head
     export_f.close()
@@ -23,7 +21,7 @@ def init_html(filename):  # init the web form
         pass
     else:
         try:
-            os.mkdir("ouput")
+            os.mkdir("output")
         except:
             pass
     web_frame = """<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
@@ -53,7 +51,7 @@ def init_html(filename):  # init the web form
     <left>
     <h3>
     <b>
-    WMIN v1.0 scan report
+    WMIN v0.1 scan report
     </b>
     </h3>
     </left>

@@ -1,17 +1,15 @@
 # coding=utf-8
 import argparse
 from libs import addon, Url
-from sys import version_info
 from thirdparty import colorama
-from libs.printf.py3 import printf
-from urllib.parse import urlparse
+from libs.display import printf
 
 
 def main():
     colorama.init()
     banner = """
                             ██              
-                            ▀▀               | dev <0.02> |
+                            ▀▀               | dev <0.10> |
     ██      ██  ████▄██    ████     ██▄████ 
     ▀█  ██  █▀  ██ ██ ██     ██     ██▀   ██ 
      ██▄██▄██   ██ ██ ██     ██     ██    ██ 
@@ -56,12 +54,12 @@ def main():
     args = arg.parse_args()
     para = vars(args)
 
-    url = addon.deal_url(para["u"], para["U"])
-    dictionary = addon.deal_dict(para["d"], para["D"])
-    timeout = addon.deal_num(para["t"])
-    proxy = addon.batch_deal(para["p"], para["P"])
-    delay = addon.deal_num(para["e"])
-    ua = addon.batch_deal(para["a"], para["A"])
+    url = addon.format_urls(para["u"], para["U"])
+    dictionary = addon.format_dicts(para["d"], para["D"])
+    timeout = addon.format_nums(para["t"])
+    proxy = addon.format_batchs(para["p"], para["P"])
+    delay = addon.format_nums(para["e"])
+    ua = addon.format_batchs(para["a"], para["A"])
     ignore_text = para["i"]
     method = addon.filter_method(para["m"])
 
@@ -79,7 +77,7 @@ def main():
         for i in range(url.qsize()):
             target = Url.Url(url.get(), dictionary,
                              timeout, proxy, delay, ua, ignore_text, method)
-            target.build_report_file()
+            target.set_reportfile()
             target.run()
             target.reconnect()
 
@@ -89,7 +87,8 @@ if __name__ == '__main__':
         main()
     except Exception as e:
         # if you want to show the details of error
+        print(e)
         if False:
-            printf(e)
-        printf("Maybe something wrong.........\n", "warning")
-        exit()
+
+            printf("Maybe something wrong.........\n", "warning")
+            exit()
