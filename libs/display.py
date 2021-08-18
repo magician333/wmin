@@ -7,7 +7,7 @@ init(autoreset=True)
 
 def printf(string, status="blank"):
     """
-    printf function\n
+    printf function
     status default is ordinary
     ordinary == White
     normal == Green
@@ -29,6 +29,10 @@ def printf(string, status="blank"):
 
     elif "normal" == status:
         print(Fore.GREEN+"[Normal] "+string+Fore.RESET)
+
+    elif "string" == status:
+        print(Fore.GREEN+string+Fore.RESET)
+
     else:
         print(Fore.BLUE+"No "+status+Fore.RESET)
 

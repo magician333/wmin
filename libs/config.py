@@ -9,7 +9,7 @@ This file is used to configure the wmin default settings
 timeout = 0.4
 
 # Set not output to result file default status code
-max_status_code = 400
+ignore_status_code = [404]
 
 # set default user-agent
-default_ua = "Mozilla/5.0 (Windows NT 6.2; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.1667.0 Safari/537.36"
+default_ua = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36"

@@ -3,6 +3,7 @@
 import os
 
 from .display import printf
+from . import config
 
 
 def export_html(export_file, url, url_text):  # export result file
@@ -31,7 +32,7 @@ def init_html(filename):  # init the web form
 "http://www.w3.org/TR/html4/loose.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
-    <title>WMIN result</title>
+    <title>WMIN Report</title>
     <style type="text/css">
     <!--
     a:link {
@@ -52,15 +53,15 @@ def init_html(filename):  # init the web form
     <body>
 
     <left>
-    <h3>
+    <h1>
     <b>
-    WMIN v0.1 scan report
+    WMIN v0.20 Scan Report
     </b>
-    </h3>
+    </h1>
     </left>
-
+    <h2>This report for <strong>[%s]</strong></h2>
     </body>
-</html>"""
+</html>""" % filename
 
     export_filename = "output/" + filename + ".html"  # set output filename
     try:

@@ -2,7 +2,7 @@
 
 import argparse
 
-from libs import addon, net
+from libs import addon, net, config
 from thirdparty import colorama
 from libs.display import printf
 
@@ -11,7 +11,7 @@ def main():
     colorama.init()
     banner = """
                             ██              
-                            ▀▀               | dev <0.10> |
+                            ▀▀               | dev <0.20> |
     ██      ██  ████▄██    ████     ██▄████ 
     ▀█  ██  █▀  ██ ██ ██     ██     ██▀   ██ 
      ██▄██▄██   ██ ██ ██     ██     ██    ██ 
@@ -35,7 +35,7 @@ def main():
     arg.add_argument("-D", type=str, help="set dictionary folder", metavar="")
     # arg.add_argument("-r", type=str, help="set report filename", metavar="")
     arg.add_argument("-t", type=float, help="set timeout",
-                     metavar="", default=0.4)
+                     metavar="", default=config.timeout)
     arg.add_argument("-p", type=str,
                      help="set proxy    *format:  ip:port@type, like 0.0.0.0@http",
                      default="", metavar="")
@@ -46,7 +46,7 @@ def main():
     arg.add_argument("-e", type=int,
                      help="set delay seconds, default 0", default=0, metavar="")
     arg.add_argument("-a", type=str,
-                     help="set User-Agent", metavar="", default="")
+                     help="set User-Agent", default=config.default_ua, metavar="")
     arg.add_argument("-A", type=str,
                      help="set User-Agent file,random read",
                      default="", metavar="")
@@ -64,11 +64,6 @@ def main():
     ua = addon.format_batchs(para["a"], para["A"])
     ignore_text = para["i"]
     method = addon.filter_method(para["m"])
-
-    if "" != ignore_text and "head" == method:
-        printf("Can't use head method and ignore text at same time",
-               "error")
-        exit()
 
     if url and dictionary is None:
         for i in range(url.qsize()):

@@ -9,6 +9,7 @@ from . import result
 from random import randint
 from .display import printf, printweb
 from urllib.parse import urlparse
+from . import config
 
 
 class Url:
@@ -119,10 +120,16 @@ class Url:
             code = response.status_code
             html = response.text
 
+            if "" != self.ignore_text and "head" == self.method:
+                printf("Can't use head method and ignore text at same time",
+                       "error")
+                exit()
+
             if self.ignore_text == "" or self.ignore_text not in html:
                 printweb(code, url)
-                result.export_html(self.report_filename,
-                                   url, url+"&nbsp;&nbsp;&nbsp;<strong>[" + str(code)+"]</strong>")
+                if code not in config.ignore_status_code:
+                    result.export_html(self.report_filename,
+                                       url, url+"&nbsp;&nbsp;&nbsp;<strong>[" + str(code)+"]</strong>")
 
         except KeyboardInterrupt:
             exit()
@@ -169,11 +176,18 @@ class Url:
             exit()
 
     def run(self):
+
         stime = time.time()
-        printf("Total number of dictionary:"+str(self.dict_line.qsize())+"\n",
-               "normal")
+        topprompt = "Total number of dictionary:"+str(self.dict_line.qsize())
+
+        printf("\n")
+        printf(topprompt, "normal")
+        printf((len(topprompt)+9)*"="+"\n", "string")
+
         for i in range(self.dict_line.qsize()):
             self.scan()
-        printf("")
-        printf("All works done! It takes "+str(time.time()-stime)[:5]+"s",
-               "normal")
+
+        bottomprompt = "All works done! It takes " + \
+            str(time.time()-stime)[:5]+"s"
+        printf("\n"+(len(bottomprompt)+9)*"=", "string")
+        printf(bottomprompt, "normal")

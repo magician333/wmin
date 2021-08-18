@@ -17,7 +17,7 @@ def filter_method(method):
 
 def format_dicts(dic, DIC):
     if dic and DIC:
-        printf("Parameter error,just support a kind of set function", "error")
+        printf("Parameter error,only one parameter of the same type can be set", "error")
         exit()
     elif dic is None and DIC is not None:
         if os.path.isdir(DIC):
@@ -39,7 +39,7 @@ def format_urls(url, URL):
 
     url_list = queue.Queue()
     if url and URL:
-        printf("Parameter error,just support a kind of set function", "error")
+        printf("Parameter error,only one parameter of the same type can be set", "error")
         exit()
     elif url is None and URL is not None:
         if os.path.isfile(URL):
@@ -61,7 +61,7 @@ def format_urls(url, URL):
 def format_batchs(single, mutile):
     list_ = []
     if single and mutile:
-        printf("Parameter error,just support a kind of set function", "error")
+        printf("Parameter error,only one parameter of the same type can be set", "error")
         exit()
     elif "" == single and mutile != "":
         if os.path.isfile(mutile):
