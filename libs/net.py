@@ -1,13 +1,14 @@
 # coding=utf-8
 
 import time
+import queue
 import requests
-from random import randint
-from . import result
 import socket
+
+from . import result
+from random import randint
 from .display import printf, printweb
 from urllib.parse import urlparse
-import queue
 
 
 class Url:

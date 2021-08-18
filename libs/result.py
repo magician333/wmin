@@ -1,4 +1,7 @@
+# coding=utf-8
+
 import os
+
 from .display import printf
 
 
@@ -59,7 +62,7 @@ def init_html(filename):  # init the web form
     </body>
 </html>"""
 
-    export_filename = "ouput/" + filename + ".html"  # set output filename
+    export_filename = "output/" + filename + ".html"  # set output filename
     try:
         export_file = open(export_filename, "w")  # use write to open file
     except:

@@ -1,10 +1,11 @@
+# coding=utf-8
+
 from thirdparty.colorama import Fore, init
 
 init(autoreset=True)
 
 
 def printf(string, status="blank"):
-
     """
     printf function\n
     status default is ordinary

@@ -1,7 +1,10 @@
+# coding=utf-8
+
 import os
 import glob
-from .display import printf
 import queue
+
+from .display import printf
 
 
 def filter_method(method):

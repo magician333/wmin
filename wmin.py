@@ -1,6 +1,8 @@
 # coding=utf-8
+
 import argparse
-from libs import addon, Url
+
+from libs import addon, net
 from thirdparty import colorama
 from libs.display import printf
 
@@ -70,12 +72,12 @@ def main():
 
     if url and dictionary is None:
         for i in range(url.qsize()):
-            target = Url.Url(url.get(), "", timeout,
+            target = net.Url(url.get(), "", timeout,
                              proxy, delay, ua, ignore_text, method)
             target.get_info()
     elif url and dictionary:
         for i in range(url.qsize()):
-            target = Url.Url(url.get(), dictionary,
+            target = net.Url(url.get(), dictionary,
                              timeout, proxy, delay, ua, ignore_text, method)
             target.set_reportfile()
             target.run()
