@@ -5,11 +5,12 @@ import queue
 import requests
 import socket
 
-from . import result
+from . import report
 from random import randint
 from .display import printf, printweb
 from urllib.parse import urlparse
 from .config import *
+from requests.packages import urllib3
 
 
 class Url:
@@ -17,7 +18,7 @@ class Url:
     this class include the scan and get website information"""
 
     def __init__(self, url, dictionary, timeout,
-                 proxy, delay, ua, ignore_text, method):
+                 proxy, delay, ua, ignore_text, method, ssl):
         self.format_url(url)
         self.dictionary = self.format_dict(dictionary)
         self.timeout = timeout
@@ -27,6 +28,7 @@ class Url:
         self.ignore_text = ignore_text
         self.method = self.filter_method(method)
         self.fail_url = queue.Queue()
+        self.ssl = ssl
 
     def set_ua(self, ua):
         if "" == ua:
@@ -48,7 +50,7 @@ class Url:
             return None
 
     def set_reportfile(self):
-        self.report_filename = result.init_html(self.hostname)
+        self.report_filename = report.init_html(self.hostname)
 
     def format_dict(self, dictionary):
         self.dict_line = queue.Queue()
@@ -102,12 +104,15 @@ class Url:
     def scan(self):
         url = self.url + self.dict_line.get_nowait()
 
+        urllib3.disable_warnings  # disable ssl verify warnings
+
         try:
             # use appoint method
             kwargs = {"url": url,
                       "timeout": self.timeout,
                       "proxies": self.proxy[randint(0, len(self.proxy)-1)],
                       "headers": self.ua[randint(0, len(self.ua)-1)],
+                      "verify": self.ssl,
                       "allow_redirects": False}
 
             if "get" == self.method:
@@ -127,12 +132,12 @@ class Url:
 
             if self.ignore_text == "" or self.ignore_text not in html:
                 # printweb(code, url)
-                # result.export_html(self.report_filename,
+                # report.export_html(self.report_filename,
                 #                    url, url+"&nbsp;&nbsp;&nbsp;<strong>[" + str(code)+"]</strong>")
                 if code not in ignore_display_status_code:
                     printweb(code, url)
                 if code not in ignore_report_status_code:
-                    result.export_html(self.report_filename,
+                    report.export_html(self.report_filename,
                                        url, url+"&nbsp;&nbsp;&nbsp;<strong>[" + str(code)+"]</strong>")
 
         except KeyboardInterrupt:
@@ -195,3 +200,5 @@ class Url:
             str(time.time()-stime)[:5]+"s"
         printf("\n"+(len(bottomprompt)+9)*"=", "string")
         printf(bottomprompt, "normal")
+        printf("The report file has been saved ./" +
+               self.report_filename, "normal")

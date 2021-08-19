@@ -9,10 +9,10 @@
 ### Set wmin basic parameters, recommended that ordinary users do not modify it ###
 ###################################################################################
 
-version = "0.2.1"
+version = "0.2.2"
 banner = """
                             ██              
-                            ▀▀               | dev <{%s}> |
+                            ▀▀               | dev <%s> |
     ██      ██  ████▄██    ████     ██▄████ 
     ▀█  ██  █▀  ██ ██ ██     ██     ██▀   ██ 
      ██▄██▄██   ██ ██ ██     ██     ██    ██ 
@@ -60,3 +60,6 @@ ignore_report_status_code = []
 
 # The url that sets the status code is not displayed,use numbers instead of characters
 ignore_display_status_code = []
+
+# Set ssl,default False, if you need to use ssl, set it to the CA filename
+default_ssl = False

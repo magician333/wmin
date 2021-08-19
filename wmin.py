@@ -39,6 +39,8 @@ def main():
                      default="", metavar="")
     arg.add_argument("-i", type=str,
                      help="set ignore text", default=default_ignoretext, metavar="")
+    arg.add_argument("-s", type=str,
+                     help="set whether to use SSL", default=default_ssl, metavar="")
 
     args = arg.parse_args()
     para = vars(args)
@@ -51,16 +53,17 @@ def main():
     ua = addon.format_batchs(para["a"], para["A"])
     ignore_text = para["i"]
     method = addon.filter_method(para["m"])
+    ssl = addon.read_file(para["s"])
 
     if url and dictionary is None:
         for i in range(url.qsize()):
             target = net.Url(url.get(), "", timeout,
-                             proxy, delay, ua, ignore_text, method)
+                             proxy, delay, ua, ignore_text, method, ssl)
             target.get_info()
     elif url and dictionary:
         for i in range(url.qsize()):
             target = net.Url(url.get(), dictionary,
-                             timeout, proxy, delay, ua, ignore_text, method)
+                             timeout, proxy, delay, ua, ignore_text, method, ssl)
             target.set_reportfile()
             target.run()
             target.reconnect()
