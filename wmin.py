@@ -2,28 +2,15 @@
 
 import argparse
 
-from libs import addon, net, config
+from libs import addon, net
 from thirdparty import colorama
 from libs.display import printf
+from libs.config import *
 
 
 def main():
     colorama.init()
-    banner = """
-                            ██              
-                            ▀▀               | dev <0.20> |
-    ██      ██  ████▄██    ████     ██▄████ 
-    ▀█  ██  █▀  ██ ██ ██     ██     ██▀   ██ 
-     ██▄██▄██   ██ ██ ██     ██     ██    ██ 
-     ▀██  ██▀   ██ ██ ██  ▄▄▄██▄▄▄  ██    ██ 
-      ▀▀  ▀▀    ▀▀ ▀▀ ▀▀  ▀▀▀▀▀▀▀▀  ▀▀    ▀▀ """
-    usage = "wmin.py -u url [options]"
-    description = '''
-    Wmin is a web content discovery tool.
-    It make requests and analyze the responses trying to figure out whether the
-    resource is or not accessible.
-    '''
-    epilog = "License, requests, etc: https://github.com/magician333/wmin"
+
     arg = argparse.ArgumentParser(usage=usage,
                                   description=description, epilog=epilog)
     printf(colorama.Fore.LIGHTBLUE_EX+banner+colorama.Fore.RESET)
@@ -31,27 +18,27 @@ def main():
         "-u", type=str, help="set target url, must with protocl", metavar="")
     arg.add_argument("-U", type=str, help="set urls file", metavar="")
     arg.add_argument(
-        "-d", type=str, help="set dictionary, best to use txt format", metavar="")
-    arg.add_argument("-D", type=str, help="set dictionary folder", metavar="")
-    # arg.add_argument("-r", type=str, help="set report filename", metavar="")
+        "-d", type=str, help="set dictionary, best to use txt format", default=default_dictionary, metavar="")
+    arg.add_argument("-D", type=str, help="set dictionary folder",
+                     default=default_Dictionaryfolder, metavar="")
     arg.add_argument("-t", type=float, help="set timeout",
-                     metavar="", default=config.timeout)
+                     metavar="", default=default_timeout)
     arg.add_argument("-p", type=str,
-                     help="set proxy    *format:  ip:port@type, like 0.0.0.0@http",
-                     default="", metavar="")
+                     help="set proxy    *format:  ip:port@type, like 0.0.0.0:8080@http",
+                     default=default_proxy, metavar="")
     arg.add_argument("-P", type=str,
                      help="set proxy file,random read", default="", metavar="")
     arg.add_argument("-m", type=str,
-                     help="set method, GET POST HEAD or others, default GET", default="get", metavar="")
+                     help="set method, GET POST HEAD or others, default GET", default=default_method, metavar="")
     arg.add_argument("-e", type=int,
                      help="set delay seconds, default 0", default=0, metavar="")
     arg.add_argument("-a", type=str,
-                     help="set User-Agent", default=config.default_ua, metavar="")
+                     help="set User-Agent", default=default_ua, metavar="")
     arg.add_argument("-A", type=str,
                      help="set User-Agent file,random read",
                      default="", metavar="")
     arg.add_argument("-i", type=str,
-                     help="set ignore text", default="", metavar="")
+                     help="set ignore text", default=default_ignoretext, metavar="")
 
     args = arg.parse_args()
     para = vars(args)

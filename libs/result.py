@@ -3,7 +3,7 @@
 import os
 
 from .display import printf
-from . import config
+from .config import *
 
 
 def export_html(export_file, url, url_text):  # export result file
@@ -55,13 +55,13 @@ def init_html(filename):  # init the web form
     <left>
     <h1>
     <b>
-    WMIN v0.20 Scan Report
+    WMIN V%s Scan Report
     </b>
     </h1>
     </left>
     <h2>This report for <strong>[%s]</strong></h2>
     </body>
-</html>""" % filename
+</html>""" % (version, filename)
 
     export_filename = "output/" + filename + ".html"  # set output filename
     try:

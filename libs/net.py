@@ -9,7 +9,7 @@ from . import result
 from random import randint
 from .display import printf, printweb
 from urllib.parse import urlparse
-from . import config
+from .config import *
 
 
 class Url:
@@ -121,13 +121,17 @@ class Url:
             html = response.text
 
             if "" != self.ignore_text and "head" == self.method:
-                printf("Can't use head method and ignore text at same time",
+                printf("Can't use head method and ignore text at the same time",
                        "error")
                 exit()
 
             if self.ignore_text == "" or self.ignore_text not in html:
-                printweb(code, url)
-                if code not in config.ignore_status_code:
+                # printweb(code, url)
+                # result.export_html(self.report_filename,
+                #                    url, url+"&nbsp;&nbsp;&nbsp;<strong>[" + str(code)+"]</strong>")
+                if code not in ignore_display_status_code:
+                    printweb(code, url)
+                if code not in ignore_report_status_code:
                     result.export_html(self.report_filename,
                                        url, url+"&nbsp;&nbsp;&nbsp;<strong>[" + str(code)+"]</strong>")
 
