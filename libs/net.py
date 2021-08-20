@@ -131,9 +131,6 @@ class Url:
                 exit()
 
             if self.ignore_text == "" or self.ignore_text not in html:
-                # printweb(code, url)
-                # report.export_html(self.report_filename,
-                #                    url, url+"&nbsp;&nbsp;&nbsp;<strong>[" + str(code)+"]</strong>")
                 if code not in ignore_display_status_code:
                     printweb(code, url)
                 if code not in ignore_report_status_code:

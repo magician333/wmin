@@ -47,7 +47,7 @@ Wmin(Website Miner)v0.2.2 是夜月魂信息技术团队-**紫火**开发的一�
 * 支持网站基本信息获取
 * 支持延时扫描
 * 支持SSL
-* 支持Linux、BSD、OS X、Windows、Android([Termux](https://termux.com))多平台
+* 支持Linux、BSD、OS X、Windows等多平台
 
 说明
 ------

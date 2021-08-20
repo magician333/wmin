@@ -2,7 +2,7 @@
 
 import argparse
 
-from libs import addon, net
+from libs import addon, net, report
 from thirdparty import colorama
 from libs.display import printf
 from libs.config import *
@@ -67,6 +67,7 @@ def main():
             target.set_reportfile()
             target.run()
             target.reconnect()
+            report.end_html(target.report_filename)
 
 
 if __name__ == '__main__':
