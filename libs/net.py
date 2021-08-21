@@ -160,6 +160,7 @@ class Url:
 
     def get_info(self):
 
+        printf("\n")
         printf("Domain:\t" + self.url, "normal")
         try:
             try:
@@ -197,5 +198,5 @@ class Url:
             str(time.time()-stime)[:5]+"s"
         printf("\n"+(len(bottomprompt)+9)*"=", "string")
         printf(bottomprompt, "normal")
-        printf("The report file has been saved ./" +
-               self.report_filename, "normal")
+        printf("The report file has been saved \"./" +
+               self.report_filename+"\"", "normal")

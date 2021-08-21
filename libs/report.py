@@ -33,6 +33,7 @@ def init_html(filename):  # init the web form
         :hover,
         :active {
             text-decoration: none;
+            color: #000;
         }
 
         ul {
@@ -56,7 +57,7 @@ def init_html(filename):  # init the web form
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wmin Report</title>
+    <title>WMIN Report</title>
     <style type="text/css">
         %s
     </style>
