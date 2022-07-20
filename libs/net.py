@@ -13,13 +13,13 @@ from .config import *
 from requests.packages import urllib3
 
 
-class Url:
+class Net:
     """Url is the most important part of wmin,
     this class include the scan and get website information"""
 
-    def __init__(self, url, dictionary, timeout,
+    def __init__(self, domain, dictionary, timeout,
                  proxy, delay, ua, ignore_text, method, ssl):
-        self.format_url(url)
+        self.format_url(domain)
         self.dictionary = self.format_dict(dictionary)
         self.timeout = timeout
         self.proxy = list(map(self.set_proxy, proxy))
@@ -89,7 +89,7 @@ class Url:
                 purl = url[:-1]
                 hostname = url[:-1]
 
-            self.url = purl
+            self.domain = purl
             self.hostname = hostname
         else:
             printf("Please enter url with protocl", "warning")
@@ -102,7 +102,7 @@ class Url:
             return method.lower()
 
     def scan(self):
-        url = self.url + self.dict_line.get_nowait()
+        url = self.domain + self.dict_line.get_nowait()
 
         urllib3.disable_warnings  # disable ssl verify warnings
 
@@ -140,7 +140,7 @@ class Url:
         except KeyboardInterrupt:
             exit()
         except Exception as e:
-            self.fail_url.put(url.replace(self.url, ""))
+            self.fail_url.put(url.replace(self.domain, ""))
             printf(url + "\tConnect error", "error")
         time.sleep(self.delay)
         # delay time
@@ -161,11 +161,11 @@ class Url:
     def get_info(self):
 
         printf("\n")
-        printf("Domain:\t" + self.url, "normal")
+        printf("Domain:\t" + self.domain, "normal")
         try:
             try:
                 printf("Server:\t" + requests.get
-                       (self.url, timeout=self.timeout,
+                       (self.domain, timeout=self.timeout,
                         proxies=self.proxy[
                             randint(0, len(self.proxy)-1)],
                         headers=self.ua[randint(0, len(self.ua)-1)],
@@ -189,14 +189,14 @@ class Url:
 
         printf("\n")
         printf(topprompt, "normal")
-        printf((len(topprompt)+9)*"="+"\n", "string")
+        printf("")
 
         for i in range(self.dict_line.qsize()):
             self.scan()
 
         bottomprompt = "All works done! It takes " + \
             str(time.time()-stime)[:5]+"s"
-        printf("\n"+(len(bottomprompt)+9)*"=", "string")
+        printf("")
         printf(bottomprompt, "normal")
         printf("The report file has been saved \"./" +
                self.report_filename+"\"", "normal")

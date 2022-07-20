@@ -19,16 +19,16 @@ def printf(string, status="blank"):
         print(string)
 
     elif "ordinary" == status:
-        print("[Ordinary] "+string)
+        print("[O] "+string)
 
     elif "error" == status:
-        print(Fore.RED+"[Error] "+string+Fore.RESET)
+        print(Fore.RED+"[E] "+string+Fore.RESET)
 
     elif "warning" == status:
-        print(Fore.YELLOW+"[Warning] "+string+Fore.RESET)
+        print(Fore.YELLOW+"[W] "+string+Fore.RESET)
 
     elif "normal" == status:
-        print(Fore.GREEN+"[Normal] "+string+Fore.RESET)
+        print(Fore.GREEN+"[N] "+string+Fore.RESET)
 
     elif "string" == status:
         print(Fore.GREEN+string+Fore.RESET)

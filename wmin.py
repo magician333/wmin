@@ -15,8 +15,8 @@ def main():
                                   description=description, epilog=epilog)
     printf(colorama.Fore.LIGHTBLUE_EX+banner+colorama.Fore.RESET)
     arg.add_argument(
-        "-u", type=str, help="set target url, must with protocl", metavar="")
-    arg.add_argument("-U", type=str, help="set urls file", metavar="")
+        "-u", type=str, help="set domain, must with protocl", metavar="")
+    arg.add_argument("-U", type=str, help="set domain file", metavar="")
     arg.add_argument(
         "-d", type=str, help="set dictionary, best to use txt format", default=default_dictionary, metavar="")
     arg.add_argument("-D", type=str, help="set dictionary folder",
@@ -57,12 +57,12 @@ def main():
 
     if url and dictionary is None:
         for i in range(url.qsize()):
-            target = net.Url(url.get(), "", timeout,
+            target = net.Net(url.get(), "", timeout,
                              proxy, delay, ua, ignore_text, method, ssl)
             target.get_info()
     elif url and dictionary:
         for i in range(url.qsize()):
-            target = net.Url(url.get(), dictionary,
+            target = net.Net(url.get(), dictionary,
                              timeout, proxy, delay, ua, ignore_text, method, ssl)
             target.set_reportfile()
             target.run()
