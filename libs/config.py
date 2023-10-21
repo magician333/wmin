@@ -9,7 +9,7 @@
 ### Set wmin basic parameters, recommended that ordinary users do not modify it ###
 ###################################################################################
 
-version = "0.3.2"
+version = "0.4"
 banner = """
                             ██              
                             ▀▀               | dev <%s> |

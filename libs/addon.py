@@ -17,70 +17,71 @@ def filter_method(method):
 
 def format_dicts(dic, DIC):
     if dic and DIC:
-        printf("Parameter error,only one parameter of the same type can be set", "error")
+        printf("Parameter error, only one parameter of the same type can be set", "error")
         exit()
     elif dic is None and DIC is not None:
         if os.path.isdir(DIC):
-            dictionary = glob.glob(DIC+"/*.*")
+            dictionary = glob.glob(os.path.join(DIC, "*.*"))
             return dictionary
         else:
-            printf("Dictionary folder not exists", "error")
+            printf("Dictionary folder does not exist", "error")
             exit()
     elif dic is not None and DIC is None:
-        try:
-            open(dic)
+        if os.path.isfile(dic):
             return dic
-        except:
-            printf("Dictionary not found", "error")
+        else:
+            printf("Dictionary file not found", "error")
             exit()
 
 
 def format_urls(url, URL):
-
     url_list = queue.Queue()
+
     if url and URL:
-        printf("Parameter error,only one parameter of the same type can be set", "error")
+        printf("Parameter error, only one parameter of the same type can be set", "error")
         exit()
     elif url is None and URL is not None:
         if os.path.isfile(URL):
             try:
-                with open(URL) as f:
-                    for line in f.readlines():
-                        url_list.put(line.strip("\n"))
+                with open(URL, encoding="utf-8") as f:
+                    for line in f:
+                        url_list.put(line.strip())
             except UnicodeDecodeError:
-                printf("Coding error,please convert file to utf-8", "error")
+                printf("Encoding error, please convert the file to UTF-8", "error")
                 exit()
         else:
-            printf(URL + " not exists!", "error")
+            printf(URL + " does not exist!", "error")
             exit()
     elif url is not None and URL is None:
         url_list.put(url)
+
     return url_list
 
 
 def format_batchs(single, mutile):
-    list_ = []
+    temp_list = []
+
     if single and mutile:
-        printf("Parameter error,only one parameter of the same type can be set", "error")
+        printf("Parameter error, only one parameter of the same type can be set", "error")
         exit()
-    elif "" == single and mutile != "":
+    elif single == "" and mutile != "":
         if os.path.isfile(mutile):
             try:
                 with open(mutile) as f:
-                    for line in f.readlines():
-                        list_.append(line.strip("\n"))
+                    for line in f:
+                        temp_list.append(line.strip())
             except UnicodeDecodeError:
-                printf("Coding error,please convert file to utf-8", "error")
+                printf("Encoding error, please convert the file to UTF-8", "error")
                 exit()
         else:
-            printf(mutile + " not exists!", "error")
+            printf(mutile + " does not exist!", "error")
             exit()
-    elif "" != single and "" == mutile:
-        list_.append(single)
+    elif single != "" and mutile == "":
+        temp_list.append(single)
     else:
-        list_.append("")
+        temp_list.append("")
 
-    return list_
+    return temp_list
 
 
 def format_nums(num):
@@ -92,7 +93,7 @@ def format_nums(num):
 
 
 def read_file(file):
-    if file is False:
+    if not file:
         return file
     else:
         with open(file, "r") as f:

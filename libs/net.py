@@ -1,11 +1,10 @@
 # coding=utf-8
-
 import time
 import queue
 import requests
 import socket
 
-from . import report
+from . import report, config
 from random import randint
 from .display import printf, printweb
 from urllib.parse import urlparse
@@ -37,36 +36,38 @@ class Net:
             return dict({"User-Agent": ua})
 
     def set_proxy(self, proxy):
-        if "" != proxy:
-            if ":" and "@" in proxy:
-                # proxy type : ip:port@type
-                proxy = dict({proxy.split("@")[1]: proxy.split(":")[0]
-                              + ":" + proxy.split("@")[0].split(":")[1]})
-                return proxy
+        if proxy:
+            if ":" in proxy and "@" in proxy:
+                parts = proxy.split("@")
+                proxy_type = parts[1]
+                ip_port = parts[0]
+                ip, port = ip_port.split(":")
+                return {proxy_type: ip + ":" + port}
             else:
-                printf("Type wrong!", "warning")
-                return None
+                printf("Wrong proxy format!", "warning")
         else:
             return None
 
     def set_reportfile(self):
-        self.report_filename = report.init_html(self.hostname)
+        self.report_filename = report.init_html(self.hostname, config.version)
 
     def format_dict(self, dictionary):
         self.dict_line = queue.Queue()
+
+        def process_line(line):
+            if not line.startswith("#"):
+                if line.startswith("/"):
+                    self.dict_line.put(line.strip("\n"))
+                else:
+                    self.dict_line.put("/" + line.strip("\n"))
 
         def add_dictline(filename):
             try:
                 with open(filename) as dic:
                     for line in dic.readlines():
-                        if not line.startswith("#"):
-                            # allow use '#' as note
-                            if line.startswith("/"):
-                                self.dict_line.put(line.strip("\n"))
-                            else:
-                                self.dict_line.put("/" + line.strip("\n"))
+                        process_line(line)
             except UnicodeDecodeError:
-                printf("Coding error,please convert file to utf-8", "error")
+                printf("Coding error, please convert file to utf-8", "error")
                 exit()
             except FileNotFoundError:
                 self.dict_line = None
@@ -80,20 +81,18 @@ class Net:
             add_dictline(dictionary)
 
     def format_url(self, url):
-        protocol = urlparse(url).scheme
-        if protocol:
-            purl = url
-            hostname = urlparse(url).netloc
+        parsed_url = urlparse(url)
+        protocol = parsed_url.scheme
 
-            if url.endswith("/"):
-                purl = url[:-1]
-                hostname = url[:-1]
-
-            self.domain = purl
-            self.hostname = hostname
-        else:
-            printf("Please enter url with protocl", "warning")
+        if not protocol:
+            printf("Please enter URL with protocol", "warning")
             exit()
+
+        purl = url.rstrip("/")
+        hostname = parsed_url.netloc.rstrip("/")
+
+        self.domain = purl
+        self.hostname = hostname
 
     def filter_method(self, method):
         if method.lower() not in ["get", "post", "head"]:
@@ -104,99 +103,123 @@ class Net:
     def scan(self):
         url = self.domain + self.dict_line.get_nowait()
 
-        urllib3.disable_warnings  # disable ssl verify warnings
+        urllib3.disable_warnings()  # disable SSL verify warnings
 
         try:
-            # use appoint method
-            kwargs = {"url": url,
-                      "timeout": self.timeout,
-                      "proxies": self.proxy[randint(0, len(self.proxy)-1)],
-                      "headers": self.ua[randint(0, len(self.ua)-1)],
-                      "verify": self.ssl,
-                      "allow_redirects": False}
+            # Use the specified method
+            kwargs = {
+                "url": url,
+                "timeout": self.timeout,
+                "proxies": self.proxy[randint(0, len(self.proxy) - 1)],
+                "headers": self.ua[randint(0, len(self.ua) - 1)],
+                "verify": self.ssl,
+                "allow_redirects": False
+            }
 
-            if "get" == self.method:
-                response = requests.get(**kwargs)
-            elif "post" == self.method:
-                response = requests.post(**kwargs)
-            else:
-                response = requests.head(**kwargs)
+            method_functions = {
+                "get": requests.get,
+                "post": requests.post,
+                "head": requests.head
+            }
+
+            if self.method not in method_functions:
+                printf("Invalid method specified: " + self.method, "error")
+                exit()
+
+            response = method_functions[self.method](**kwargs)
 
             code = response.status_code
             html = response.text
 
-            if "" != self.ignore_text and "head" == self.method:
-                printf("Can't use head method and ignore text at the same time",
-                       "error")
+            if self.method == "head" and self.ignore_text != "":
+                printf(
+                    "Can't use head method and ignore text at the same time", "error")
                 exit()
 
-            if self.ignore_text == "" or self.ignore_text not in html:
-                if code not in ignore_display_status_code:
-                    printweb(code, url)
-                if code not in ignore_report_status_code:
-                    report.export_html(self.report_filename,
-                                       url, url+"&nbsp;&nbsp;&nbsp;<strong>[" + str(code)+"]</strong>")
+            if self.ignore_text != "" and self.ignore_text in html:
+                return
+
+            if code in ignore_display_status_code:
+                return
+
+            printweb(code, url)
+
+            if code in ignore_report_status_code:
+                return
+
+            report.export_html(self.report_filename, url, url +
+                               "&nbsp;&nbsp;&nbsp;<strong>[" + str(code) + "]</strong>")
 
         except KeyboardInterrupt:
             exit()
         except Exception as e:
             self.fail_url.put(url.replace(self.domain, ""))
             printf(url + "\tConnect error", "error")
-        time.sleep(self.delay)
-        # delay time
 
     def reconnect(self):
-        while 0 != self.fail_url.qsize():
-            try:
-                if input("Reconnect failed url?[Y/n]") in [
-                        "n", "no", "No", "NO"]:
-                    break
-                else:
-                    self.dict_line = self.fail_url
-                    self.fail_url = queue.Queue()
-                    self.run()
-            except:
-                exit()
+        if self.fail_url.empty():
+            return
+
+        while True:
+            reconnect_choice = input("Reconnect failed url? [Y/n]")
+
+            if reconnect_choice.lower() in ["n", "no"]:
+                break
+
+            self.dict_line = self.fail_url
+            self.fail_url = queue.Queue()
+            self.run()
+            return
+
+        exit()
 
     def get_info(self):
-
         printf("\n")
         printf("Domain:\t" + self.domain, "normal")
-        try:
-            try:
-                printf("Server:\t" + requests.get
-                       (self.domain, timeout=self.timeout,
-                        proxies=self.proxy[
-                            randint(0, len(self.proxy)-1)],
-                        headers=self.ua[randint(0, len(self.ua)-1)],
-                        allow_redirects=False).headers["Server"], "normal")
 
-            except:
-                printf("Can\'t get server,Connect wrong", "error")
+        try:
+            response = requests.get(
+                self.domain,
+                timeout=self.timeout,
+                proxies=self.proxy[randint(0, len(self.proxy) - 1)],
+                headers=self.ua[randint(0, len(self.ua) - 1)],
+                allow_redirects=False
+            )
+
             try:
-                printf("IP:\t" +
-                       socket.gethostbyname(self.hostname), "normal")
-            except:
-                printf("Can\'t get ip,Connect wrong", "error")
+                server = response.headers["Server"]
+                printf("Server:\t" + server, "normal")
+            except KeyError:
+                printf("Can't get server, Connect wrong", "error")
+
+            try:
+                ip = socket.gethostbyname(self.hostname)
+                printf("IP:\t" + ip, "normal")
+            except socket.gaierror:
+                printf("Can't get IP, Connect wrong", "error")
+
             printf("")
+
         except KeyboardInterrupt:
             exit()
+        except requests.exceptions.RequestException:
+            printf("Failed to retrieve information for the domain", "error")
 
     def run(self):
-
         stime = time.time()
-        topprompt = "Total number of dictionary:"+str(self.dict_line.qsize())
 
+        topprompt = "Total number of dictionary: " + \
+            str(self.dict_line.qsize())
         printf("\n")
         printf(topprompt, "normal")
         printf("")
 
-        for i in range(self.dict_line.qsize()):
+        while not self.dict_line.empty():
             self.scan()
 
-        bottomprompt = "All works done! It takes " + \
-            str(time.time()-stime)[:5]+"s"
+        bottomprompt = "All work done! It took " + \
+            str(time.time() - stime)[:5] + "s"
         printf("")
         printf(bottomprompt, "normal")
         printf("The report file has been saved \"./" +
-               self.report_filename+"\"", "normal")
+               self.report_filename + "\"", "normal")

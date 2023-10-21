@@ -11,38 +11,46 @@ from libs.config import *
 def main():
     colorama.init()
 
-    arg = argparse.ArgumentParser(usage=usage,
-                                  description=description, epilog=epilog)
+    parser = argparse.ArgumentParser(usage=usage,
+                                     description=description, epilog=epilog)
     printf(colorama.Fore.LIGHTBLUE_EX+banner+colorama.Fore.RESET)
-    arg.add_argument(
-        "-u", type=str, help="set domain, must with protocl", metavar="")
-    arg.add_argument("-U", type=str, help="set domain file", metavar="")
-    arg.add_argument(
-        "-d", type=str, help="set dictionary, best to use txt format", default=default_dictionary, metavar="")
-    arg.add_argument("-D", type=str, help="set dictionary folder",
-                     default=default_Dictionaryfolder, metavar="")
-    arg.add_argument("-t", type=float, help="set timeout",
-                     metavar="", default=default_timeout)
-    arg.add_argument("-p", type=str,
-                     help="set proxy    *format:  ip:port@type, like 0.0.0.0:8080@http",
-                     default=default_proxy, metavar="")
-    arg.add_argument("-P", type=str,
-                     help="set proxy file,random read", default="", metavar="")
-    arg.add_argument("-m", type=str,
-                     help="set method, GET POST HEAD or others, default GET", default=default_method, metavar="")
-    arg.add_argument("-e", type=int,
-                     help="set delay seconds, default 0", default=0, metavar="")
-    arg.add_argument("-a", type=str,
-                     help="set User-Agent", default=default_ua, metavar="")
-    arg.add_argument("-A", type=str,
-                     help="set User-Agent file,random read",
-                     default="", metavar="")
-    arg.add_argument("-i", type=str,
-                     help="set ignore text", default=default_ignoretext, metavar="")
-    arg.add_argument("-s", type=str,
-                     help="set whether to use SSL", default=default_ssl, metavar="")
 
-    args = arg.parse_args()
+    default_dictionary = "default_dictionary.txt"
+    default_Dictionaryfolder = "default_Dictionaryfolder"
+    default_timeout = 5.0
+    default_proxy = "default_proxy"
+    default_method = "GET"
+    default_ua = "default_user_agent"
+    default_ignoretext = "default_ignore_text"
+    default_ssl = "default_ssl"
+
+    parser.add_argument(
+        "-u", type=str, help="set domain, must with protocol", metavar="")
+    parser.add_argument("-U", type=str, help="set domain file", metavar="")
+    parser.add_argument("-d", type=str, help="set dictionary, best to use txt format",
+                        default=default_dictionary, metavar="")
+    parser.add_argument("-D", type=str, help="set dictionary folder",
+                        default=default_Dictionaryfolder, metavar="")
+    parser.add_argument("-t", type=float, help="set timeout",
+                        metavar="", default=default_timeout)
+    parser.add_argument(
+        "-p", type=str, help="set proxy *format: ip:port@type, like 0.0.0.0:8080@http", default=default_proxy, metavar="")
+    parser.add_argument(
+        "-P", type=str, help="set proxy file, random read", default="", metavar="")
+    parser.add_argument("-m", type=str, help="set method, GET POST HEAD or others, default GET",
+                        default=default_method, metavar="")
+    parser.add_argument(
+        "-e", type=int, help="set delay seconds, default 0", default=0, metavar="")
+    parser.add_argument("-a", type=str, help="set User-Agent",
+                        default=default_ua, metavar="")
+    parser.add_argument(
+        "-A", type=str, help="set User-Agent file, random read", default="", metavar="")
+    parser.add_argument("-i", type=str, help="set ignore text",
+                        default=default_ignoretext, metavar="")
+    parser.add_argument(
+        "-s", type=str, help="set whether to use SSL", default=default_ssl, metavar="")
+
+    args = parser.parse_args()
     para = vars(args)
 
     url = addon.format_urls(para["u"], para["U"])
@@ -55,15 +63,15 @@ def main():
     method = addon.filter_method(para["m"])
     ssl = addon.read_file(para["s"])
 
-    if url and dictionary is None:
-        for i in range(url.qsize()):
-            target = net.Net(url.get(), "", timeout,
-                             proxy, delay, ua, ignore_text, method, ssl)
+    if url is not None and dictionary is None:
+        while not url.empty():
+            target = net.Net(url.get(), "", timeout, proxy,
+                             delay, ua, ignore_text, method, ssl)
             target.get_info()
-    elif url and dictionary:
-        for i in range(url.qsize()):
-            target = net.Net(url.get(), dictionary,
-                             timeout, proxy, delay, ua, ignore_text, method, ssl)
+    elif url is not None and dictionary is not None:
+        while not url.empty():
+            target = net.Net(url.get(), dictionary, timeout,
+                             proxy, delay, ua, ignore_text, method, ssl)
             target.set_reportfile()
             target.run()
             target.reconnect()
@@ -76,7 +84,3 @@ if __name__ == '__main__':
     except Exception as e:
         # if you want to show the details of error
         print(e)
-        if False:
-
-            printf("Maybe something wrong.........\n", "warning")
-            exit()
