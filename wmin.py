@@ -13,16 +13,8 @@ def main():
 
     parser = argparse.ArgumentParser(usage=usage,
                                      description=description, epilog=epilog)
-    printf(colorama.Fore.LIGHTBLUE_EX+banner+colorama.Fore.RESET)
 
-    default_dictionary = "default_dictionary.txt"
-    default_Dictionaryfolder = "default_Dictionaryfolder"
-    default_timeout = 5.0
-    default_proxy = "default_proxy"
-    default_method = "GET"
-    default_ua = "default_user_agent"
-    default_ignoretext = "default_ignore_text"
-    default_ssl = "default_ssl"
+    printf(colorama.Fore.LIGHTBLUE_EX+banner+colorama.Fore.RESET)
 
     parser.add_argument(
         "-u", type=str, help="set domain, must with protocol", metavar="")

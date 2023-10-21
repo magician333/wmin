@@ -169,7 +169,9 @@ class Net:
             self.dict_line = self.fail_url
             self.fail_url = queue.Queue()
             self.run()
-            return
+
+            if self.fail_url.empty():
+                return
 
         exit()
 
