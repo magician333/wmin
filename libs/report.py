@@ -2,24 +2,23 @@
 
 import os
 import datetime
+import csv
 
 from .display import printf
 from .config import *
 
 
-def export_html(report_file, url, url_text):  # export result file
-    try:  # open file
-        report_f = open(report_file, "a+")  # use add method to open file
-    except:
-        printf("Can't export the result!", "error")
-        # set format to html
-    export_web = "<ul><a href=\"{0}\" target=\"_blank\">{1}</a></ul>\n".format(
-        url, url_text)
-    report_f.write(export_web)
-    report_f.close()
+def export_html(filename, scanned_url):  # export result file
+    # try:  # open file
+    #     report_f = open(report_file, "a+")  # use add method to open file
+    # except:
+    #     printf("Can't export the result!", "error")
+    #     # set format to html
+    # export_web = "<ul><a href=\"{0}\" target=\"_blank\">{1}</a></ul>\n".format(
+    #     url, url_text)
+    # report_f.write(export_web)
+    # report_f.close()
 
-
-def init_html(filename, version):
     output_dir = "output"
     if not os.path.exists(output_dir):
         try:
@@ -37,7 +36,7 @@ def init_html(filename, version):
         }
 
         ul {
-            list-style: circle;
+            list-style: none;
         }
 
         .content {
@@ -46,7 +45,6 @@ def init_html(filename, version):
             border-radius: 10px;
             padding-top: 20px;
             padding-bottom: 20px;
-            box-shadow: rgb(58, 58, 58) 10px 10px 30px 5px;
         }
     """
 
@@ -78,27 +76,41 @@ def init_html(filename, version):
             </h2>
             <hr>
             <!-- Content -->
+            <ul>
 """
-
-    report_filename = os.path.join(output_dir, filename + ".html")
-
-    try:
-        with open(report_filename, "w") as report_file:
-            report_file.write(head_html)
-    except IOError:
-        print("Result file could not be created!")
-
-    return report_filename
-
-
-def end_html(filename):
-
     foot_html = """
+    </ul>
         </div>
     </center>
 
 </body>
 
 </html>"""
-    with open(filename, "a+") as f:
-        f.write(foot_html)
+    html_filename = os.path.join(output_dir, filename + ".html")
+    with open(html_filename, "w", encoding="utf-8") as html_file:
+        html_file.write(head_html)
+        for i in scanned_url:
+            html_file.write(
+                "<li><a href=\"{0}\" target=\"_blank\">{0}\t\t\t{1}</a></li>\n".format(i[0], i[1]))
+        html_file.write(foot_html)
+    printf("The web report file has been saved \"./" +
+           html_filename + "\"", "normal")
+
+
+def export_csv(filename, scanned_url):
+    output_dir = "output"
+    if not os.path.exists(output_dir):
+        try:
+            os.mkdir(output_dir)
+        except OSError:
+            pass
+
+    csv_header = ["scanned_url", "status_code"]
+    csv_filename = os.path.join(output_dir, filename + ".csv")
+    with open(csv_filename, "w", encoding="utf-8", newline="") as csv_file:
+        csv_writer = csv.writer(csv_file)
+        csv_writer.writerow(csv_header)
+        for data in scanned_url:
+            csv_writer.writerow(data)
+    printf("The csv report file has been saved \"./" +
+           csv_filename + "\"", "normal")

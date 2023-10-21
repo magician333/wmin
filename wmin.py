@@ -64,10 +64,7 @@ def main():
         while not url.empty():
             target = net.Net(url.get(), dictionary, timeout,
                              proxy, delay, ua, ignore_text, method, ssl)
-            target.set_reportfile()
             target.run()
-            target.reconnect()
-            report.end_html(target.report_filename)
 
 
 if __name__ == '__main__':

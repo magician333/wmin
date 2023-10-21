@@ -6,7 +6,7 @@ import socket
 
 from . import report, config
 from random import randint
-from .display import printf, printweb
+from .display import printf, print_scanned_url
 from urllib.parse import urlparse
 from .config import *
 from requests.packages import urllib3
@@ -28,6 +28,7 @@ class Net:
         self.method = self.filter_method(method)
         self.fail_url = queue.Queue()
         self.ssl = ssl
+        self.scanned_url = []  # format [(url,status_code)]
 
     def set_ua(self, ua):
         if "" == ua:
@@ -142,38 +143,17 @@ class Net:
             if code in ignore_display_status_code:
                 return
 
-            printweb(code, url)
+            print_scanned_url(code, url)
+            self.scanned_url.append((url, code))
 
             if code in ignore_report_status_code:
                 return
 
-            report.export_html(self.report_filename, url, url +
-                               "&nbsp;&nbsp;&nbsp;<strong>[" + str(code) + "]</strong>")
-
         except KeyboardInterrupt:
             exit()
-        except Exception as e:
+        except Exception:
             self.fail_url.put(url.replace(self.domain, ""))
             printf(url + "\tConnect error", "error")
-
-    def reconnect(self):
-        if self.fail_url.empty():
-            return
-
-        while True:
-            reconnect_choice = input("Reconnect failed url? [Y/n]")
-
-            if reconnect_choice.lower() in ["n", "no"]:
-                break
-
-            self.dict_line = self.fail_url
-            self.fail_url = queue.Queue()
-            self.run()
-
-            if self.fail_url.empty():
-                return
-
-        exit()
 
     def get_info(self):
         printf("\n")
@@ -210,18 +190,28 @@ class Net:
     def run(self):
         stime = time.time()
 
-        topprompt = "Total number of dictionary: " + \
+        top_prompt = "Total number of dictionary: " + \
             str(self.dict_line.qsize())
         printf("\n")
-        printf(topprompt, "normal")
+        printf(top_prompt, "normal")
         printf("")
 
         while not self.dict_line.empty():
             self.scan()
 
-        bottomprompt = "All work done! It took " + \
+        while not self.fail_url.empty():
+            reconnect_choice = input("Reconnect failed url? [Y/n]")
+            if reconnect_choice.lower() in ["n", "no"]:
+                break
+            self.dict_line = self.fail_url
+            self.fail_url = queue.Queue()
+            while not self.dict_line.empty():
+                self.scan()
+
+        report.export_csv(self.hostname, self.scanned_url)
+        report.export_html(self.hostname, self.scanned_url)
+
+        bottom_prompt = "All work done! It took " + \
             str(time.time() - stime)[:5] + "s"
         printf("")
-        printf(bottomprompt, "normal")
-        printf("The report file has been saved \"./" +
-               self.report_filename + "\"", "normal")
+        printf(bottom_prompt, "normal")

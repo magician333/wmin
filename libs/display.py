@@ -37,7 +37,7 @@ def printf(string, status="blank"):
         print(Fore.BLUE+"No "+status+Fore.RESET)
 
 
-def printweb(code, web):
+def print_scanned_url(code, web):
     code_init = str(code)[0]
 
     if "1" == code_init:
