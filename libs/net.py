@@ -208,8 +208,8 @@ class Net:
             while not self.dict_line.empty():
                 self.scan()
 
-        report.export_csv(self.hostname, self.scanned_url)
-        report.export_html(self.hostname, self.scanned_url)
+        report_file = report.Report(self.hostname, self.scanned_url)
+        report_file.export_file()
 
         bottom_prompt = "All work done! It took " + \
             str(time.time() - stime)[:5] + "s"

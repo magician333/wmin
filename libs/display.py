@@ -5,48 +5,37 @@ from thirdparty.colorama import Fore, init
 init(autoreset=True)
 
 
+COLORS = {
+    "blank": "",
+    "ordinary": "[ORDINARY] {}",
+    "error": f"{Fore.RED}[ERROR] {{}}{Fore.RESET}",
+    "warning": f"{Fore.YELLOW}[WARNING] {{}}{Fore.RESET}",
+    "normal": f"{Fore.GREEN}[NORMAL] {{}}{Fore.RESET}",
+    "string": f"{Fore.GREEN}{{}}{Fore.RESET}",
+}
+
+
 def printf(string, status="blank"):
     """
     printf function
-    status default is ordinary
-    ordinary == White
-    normal == Green
-    warning == Yellow
-    error == Red
+    status default is blank
     """
 
-    if "blank" == status:
-        print(string)
-
-    elif "ordinary" == status:
-        print("[ORDINARY] "+string)
-
-    elif "error" == status:
-        print(Fore.RED+"[ERROR] "+string+Fore.RESET)
-
-    elif "warning" == status:
-        print(Fore.YELLOW+"[WARNING] "+string+Fore.RESET)
-
-    elif "normal" == status:
-        print(Fore.GREEN+"[NORMAL] "+string+Fore.RESET)
-
-    elif "string" == status:
-        print(Fore.GREEN+string+Fore.RESET)
-
-    else:
-        print(Fore.BLUE+"No "+status+Fore.RESET)
+    format_string = COLORS.get(status, f"{Fore.BLUE}No {status}{Fore.RESET}")
+    print(format_string.format(string))
 
 
-def print_scanned_url(code, web):
+SCAN_COLORS = {
+    "1": Fore.LIGHTBLACK_EX,
+    "2": Fore.LIGHTGREEN_EX,
+    "3": Fore.LIGHTCYAN_EX,
+    "4": Fore.LIGHTRED_EX,
+    "5": Fore.LIGHTMAGENTA_EX,
+}
+
+
+def print_scanned_url(code, url):
     code_init = str(code)[0]
 
-    if "1" == code_init:
-        print(Fore.LIGHTBLACK_EX+"<"+str(code)+">\t"+web+Fore.RESET)
-    if "2" == code_init:
-        print(Fore.LIGHTGREEN_EX+"<"+str(code)+">\t"+web+Fore.RESET)
-    if "3" == code_init:
-        print(Fore.LIGHTCYAN_EX+"<"+str(code)+">\t"+web+Fore.RESET)
-    if "4" == code_init:
-        print(Fore.LIGHTRED_EX+"<"+str(code)+">\t"+web+Fore.RESET)
-    if "5" == code_init:
-        print(Fore.LIGHTMAGENTA_EX+"<"+str(code)+">\t"+web+Fore.RESET)
+    color = SCAN_COLORS.get(code_init, "")
+    print(f"{color}<{code}>\t{url}{Fore.RESET}")
