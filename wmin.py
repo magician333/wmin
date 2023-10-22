@@ -2,7 +2,7 @@
 
 import argparse
 
-from libs import addon, net, report
+from libs import addon, net
 from thirdparty import colorama
 from libs.display import printf
 from libs.config import *
@@ -14,7 +14,7 @@ def main():
     parser = argparse.ArgumentParser(usage=usage,
                                      description=description, epilog=epilog)
 
-    printf(colorama.Fore.LIGHTBLUE_EX+banner+colorama.Fore.RESET)
+    print(colorama.Fore.LIGHTBLUE_EX+banner+colorama.Fore.RESET)
 
     parser.add_argument(
         "-u", type=str, help="set domain, must with protocol", metavar="")
